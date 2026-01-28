@@ -9,15 +9,20 @@
     <style>
         :root {
             --bg-primary: #800000;
-            --bg-secondary: #660000;
-            --bg-card: rgba(0, 0, 0, 0.5); 
             --accent-gold: #ffd700;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.8);
             --border-color: rgba(255, 215, 0, 0.4);
+            --bg-card: rgba(0, 0, 0, 0.5); 
         }
 
+        /* Fixed Scroll Issue */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden; /* Prevents horizontal shaking */
+        }
 
         @keyframes slowBGChange {
             0% { background-color: #800000; }
@@ -27,73 +32,55 @@
             100% { background-color: #800000; }
         }
 
-        @keyframes boxColorChange {
-            0% { border-color: #ff0000; box-shadow: 0 5px 25px rgba(255, 0, 0, 0.4); }
-            25% { border-color: #ffd700; box-shadow: 0 5px 25px rgba(255, 215, 0, 0.4); }
-            50% { border-color: #00ff00; box-shadow: 0 5px 25px rgba(0, 255, 0, 0.4); }
-            75% { border-color: #00ffff; box-shadow: 0 5px 25px rgba(0, 255, 255, 0.4); }
-            100% { border-color: #ff0000; box-shadow: 0 5px 25px rgba(255, 0, 0, 0.4); }
-        }
-
         body {
             font-family: 'Outfit', sans-serif;
             animation: slowBGChange 36s infinite ease-in-out;
-            transition: background-color 9s ease;
             color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .container { max-width: 450px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
+        .container { width: 100%; max-width: 450px; margin: 0 auto; }
+
+        .header { text-align: center; margin-bottom: 30px; padding: 20px; }
 
         @keyframes slowColorChange {
             0% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
-            14% { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
-            28% { color: #00ff00; text-shadow: 0 0 20px #00ff00; }
-            42% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
-            56% { color: #0000ff; text-shadow: 0 0 20px #0000ff; }
-            70% { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
-            85% { color: #ffffff; text-shadow: 0 0 20px #ffffff; }
+            50% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
             100% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
         }
 
         .logo {
-            font-size: 2.8rem; font-weight: 900; display: flex; align-items: center;
-            justify-content: center; gap: 15px; position: relative; white-space: nowrap;
+            font-size: 2.8rem; font-weight: 900; position: relative;
             animation: slowColorChange 35s infinite linear;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
         }
 
+        /* Sparkles - Made fixed to prevent layout shifts */
         @keyframes fireworkBurst {
-            0% { transform: translate(0, 0) scale(1); opacity: 0; filter: brightness(800%) saturate(300%) hue-rotate(0deg); }
-            15% { opacity: 1; }
-            50% { opacity: 1; filter: brightness(1000%) saturate(500%) hue-rotate(180deg); box-shadow: 0 0 30px currentColor, 0 0 60px currentColor; }
-            100% { transform: translate(var(--nx), var(--ny)) scale(0.2); opacity: 0; filter: brightness(300%) hue-rotate(360deg); }
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--nx), var(--ny)) scale(0.2); opacity: 0; }
         }
 
         .name-sparkle {
-            position: absolute; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; 
+            position: absolute; width: 8px; height: 8px; border-radius: 50%; 
             animation: fireworkBurst 5s infinite ease-in-out;
-            background: currentColor; box-shadow: 0 0 20px currentColor, 0 0 45px currentColor;
+            background: currentColor; pointer-events: none;
         }
 
+        /* Energy Section */
         .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px auto; }
         .energy-bar { width: 90px; height: 90px; position: relative; }
-        .energy-circle { width: 100%; height: 100%; border-radius: 50%; position: relative; border: 3px solid rgba(255, 215, 0, 0.2); overflow: hidden; }
-        
-        .energy-fill { 
-            position: absolute; width: 100%; height: 100%; 
-            background: conic-gradient(var(--accent-gold) 30%, transparent 70%); 
-            border-radius: 50%; 
-            animation: rotateEnergy 2s linear infinite; 
-        }
-
+        .energy-circle { width: 100%; height: 100%; border-radius: 50%; border: 3px solid rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; }
+        .energy-fill { position: absolute; width: 100%; height: 100%; background: conic-gradient(var(--accent-gold) 30%, transparent 70%); animation: rotateEnergy 2s linear infinite; }
         .energy-center { 
-            position: absolute; width: 65px; height: 65px; background: rgba(0,0,0,0.8); 
-            border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            display: flex; align-items: center; justify-content: center; 
-            color: var(--accent-gold); z-index: 2; border: 2px solid var(--accent-gold);
-            font-size: 2.2rem; /* Adjusted for Emoji size */
+            position: absolute; width: 65px; height: 65px; background: rgba(0,0,0,0.8); border-radius: 50%; 
+            top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; 
+            color: var(--accent-gold); z-index: 2; border: 2px solid var(--accent-gold); font-size: 2.2rem;
         }
 
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -101,18 +88,17 @@
         .music-btn {
             width: 45px; height: 45px; background: rgba(0, 0, 0, 0.4); color: var(--accent-gold);
             border-radius: 50%; border: 2px solid var(--accent-gold); cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
         }
-        .music-btn.playing { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
 
+        /* Cards */
         .server-card, .main-card, .instructions {
             background: var(--bg-card); border: 2px solid var(--border-color);
             border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center;
-            backdrop-filter: blur(10px); animation: boxColorChange 20s infinite alternate;
+            backdrop-filter: blur(10px);
         }
 
         .stat-value { color: var(--accent-gold); font-weight: 800; font-size: 1.8rem; display: block; }
-        .stat-label { font-size: 0.8rem; text-transform: uppercase; opacity: 0.9; }
         
         input[type="tel"] {
             width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.4);
@@ -123,7 +109,7 @@
         .btn {
             width: 100%; padding: 16px; background: var(--accent-gold); color: #800000;
             border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
-            cursor: pointer; margin-top: 15px; transition: 0.3s;
+            cursor: pointer; margin-top: 15px;
         }
 
         .result-box {
@@ -133,12 +119,12 @@
         .result-box.show { display: block; }
 
         .pair-code {
-            font-size: 2.5rem; font-weight: 900; letter-spacing: 8px; color: var(--accent-gold);
+            font-size: 2.2rem; font-weight: 900; letter-spacing: 5px; color: var(--accent-gold);
             margin: 15px 0; background: rgba(0, 0, 0, 0.5); padding: 15px;
             border-radius: 12px; border: 1px solid var(--border-color);
         }
 
-        .footer { text-align: center; margin-top: 40px; color: var(--text-secondary); font-size: 0.8rem; opacity: 0.7; }
+        .footer { text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -146,14 +132,8 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 150px; --ny: -100px; color: #ff0044; left: 10%; animation-delay: 0s;"></div>
-                <div class="name-sparkle" style="--nx: -150px; --ny: 100px; color: #00ff66; right: 10%; animation-delay: 0.5s;"></div>
-                <div class="name-sparkle" style="--nx: 100px; --ny: 130px; color: #ffff00; left: 50%; animation-delay: 1s;"></div>
-                <div class="name-sparkle" style="--nx: -100px; --ny: -130px; color: #00ffff; right: 50%; animation-delay: 1.5s;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -160px; color: #ff00ff; top: 0; animation-delay: 2s;"></div>
-                <div class="name-sparkle" style="--nx: 180px; --ny: 50px; color: #ffffff; right: 0; animation-delay: 2.5s;"></div>
-                <div class="name-sparkle" style="--nx: -180px; --ny: -50px; color: #ff9900; left: 0; animation-delay: 3s;"></div>
-                <div class="name-sparkle" style="--nx: 50px; --ny: -180px; color: #00ffcc; top: 10%; animation-delay: 3.5s;"></div>
+                <div class="name-sparkle" style="--nx: 100px; --ny: -80px; color: #ff0044; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -100px; --ny: 80px; color: #00ff66; right: 10%;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -172,16 +152,10 @@
         <audio id="music2" loop><source src="https://files.catbox.moe/l6ijvv.mp3" type="audio/mpeg"></audio>
 
         <div class="server-card">
-            <div style="display: flex; justify-content: space-evenly; align-items: center;">
-                <div style="text-align: center;">
-                    <span class="stat-value">50</span>
-                    <span class="stat-label">Limit</span>
-                </div>
-                <div style="width: 2px; height: 40px; background: var(--border-color);"></div>
-                <div style="text-align: center;">
-                    <span class="stat-value" style="color:#00ff00; text-shadow: 0 0 10px #00ff00;">●</span>
-                    <span class="stat-label">Online</span>
-                </div>
+            <div style="display: flex; justify-content: space-evenly;">
+                <div><span class="stat-value">50</span><span>Limit</span></div>
+                <div style="width:1px; background:var(--border-color);"></div>
+                <div><span class="stat-value" style="color:#00ff00;">●</span><span>Online</span></div>
             </div>
         </div>
 
@@ -196,8 +170,7 @@
         </div>
 
         <div class="instructions">
-            <h4 style="color:var(--accent-gold);">Easy Steps:</h4>
-            <p style="font-size: 0.8rem; margin-top:10px; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
         </div>
 
         <div class="footer">© 2026 ADEEL-MINI | Support: 923035512967</div>
@@ -207,16 +180,12 @@
         function toggleMusic(id, btn) {
             const music = document.getElementById(id);
             const allAudios = document.querySelectorAll('audio');
-            const allBtns = document.querySelectorAll('.music-btn');
             if (music.paused) {
                 allAudios.forEach(a => a.pause());
-                allBtns.forEach(b => { b.classList.remove('playing'); b.innerHTML = '<i class="fas fa-pause"></i>'; });
                 music.play();
-                btn.classList.add('playing');
                 btn.innerHTML = '<i class="fas fa-pause"></i>';
             } else {
                 music.pause();
-                btn.classList.remove('playing');
                 btn.innerHTML = '<i class="fas fa-play"></i>';
             }
         }
