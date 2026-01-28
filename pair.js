@@ -28,21 +28,29 @@ function setupEventListeners() {
 }
 
 function updateServerStats() {
-    document.getElementById('activeBots').textContent = botCount;
-    document.getElementById('serverLimit').textContent = MAX_BOTS;
+    const activeBotsEl = document.getElementById('activeBots');
+    const serverLimitEl = document.getElementById('serverLimit');
+    const energyPercentEl = document.getElementById('energyPercent');
+    const statusDot = document.getElementById('serverStatusDot');
+
+    if(activeBotsEl) activeBotsEl.textContent = botCount;
+    if(serverLimitEl) serverLimitEl.textContent = MAX_BOTS;
     
     const energyPercent = Math.round((botCount / MAX_BOTS) * 100);
-    document.getElementById('energyPercent').textContent = energyPercent + '%';
+    if(energyPercentEl) energyPercentEl.textContent = energyPercent + '%';
     
-    const statusDot = document.getElementById('serverStatusDot');
-    if (botCount >= MAX_BOTS) statusDot.style.color = '#ff4d4d';
-    else if (botCount >= MAX_BOTS * 0.8) statusDot.style.color = '#ff9900';
-    else statusDot.style.color = '#00ff00';
+    if (statusDot) {
+        if (botCount >= MAX_BOTS) statusDot.style.color = '#ff4d4d';
+        else if (botCount >= MAX_BOTS * 0.8) statusDot.style.color = '#ff9900';
+        else statusDot.style.color = '#00ff00';
+    }
 }
 
 async function checkConnection() {
     const statusElement = document.getElementById('connectionStatus');
-    statusElement.innerHTML = '<span style="color:#00ff00">Server Ready</span>';
+    if (statusElement) {
+        statusElement.innerHTML = '<span style="color:#00ff00">Server Ready</span>';
+    }
 }
 
 async function generatePairCode() {
@@ -58,10 +66,13 @@ async function generatePairCode() {
     
     let formattedNumber = phoneInput.replace(/\D/g, '');
     
-    if (formattedNumber.startsWith('0')) formattedNumber = '92' + formattedNumber.substring(1);
-    else if (formattedNumber.length === 10) formattedNumber = '92' + formattedNumber;
+    if (formattedNumber.startsWith('0')) {
+        formattedNumber = '92' + formattedNumber.substring(1);
+    } else if (formattedNumber.length === 10) {
+        formattedNumber = '92' + formattedNumber;
+    }
     
-    if (!/^92\d{10}$/.test(formattedNumber)) {
+    if (formattedNumber.length < 10) {
         showError('Invalid WhatsApp number format');
         return;
     }
@@ -77,46 +88,36 @@ async function generatePairCode() {
     generateBtn.innerHTML = '<div class="spinner"></div> Generating...';
     
     try {
-        const response = await fetch(`${API_URL}?number=${formattedNumber}`);
-        
+        // Fetching from API with a 15-second timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(`${API_URL}?number=${formattedNumber}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         if (response.ok) {
-            try {
-                const data = await response.json();
-                const pairingCode = data.code || FIXED_CODE;
-                displayPairingCode(pairingCode);
-                showSuccess(`Code for ${formattedNumber}`);
-                
-                botCount = Math.min(MAX_BOTS, botCount + 1);
-                updateServerStats();
-                saveToHistory(formattedNumber, pairingCode);
-            } catch {
-                const pairingCode = FIXED_CODE;
-                displayPairingCode(pairingCode);
-                showSuccess(`Code for ${formattedNumber}`);
-                
-                botCount = Math.min(MAX_BOTS, botCount + 1);
-                updateServerStats();
-                saveToHistory(formattedNumber, pairingCode);
-            }
-        } else {
-            const pairingCode = FIXED_CODE;
+            const data = await response.json();
+            // Checking if API returned a valid code
+            const pairingCode = data.code || data.pairCode || FIXED_CODE;
+            
             displayPairingCode(pairingCode);
-            showSuccess(`Code for ${formattedNumber}`);
+            showSuccess(`Code generated for ${formattedNumber}`);
             
             botCount = Math.min(MAX_BOTS, botCount + 1);
             updateServerStats();
             saveToHistory(formattedNumber, pairingCode);
+        } else {
+            throw new Error('API Response Error');
         }
         
     } catch (error) {
-        const pairingCode = FIXED_CODE;
-        displayPairingCode(pairingCode);
-        showSuccess(`Code for ${formattedNumber}`);
+        console.error("Fetch Error:", error);
+        // Fallback to fixed code if API fails
+        displayPairingCode(FIXED_CODE);
+        showSuccess(`Offline mode: Using default code`);
         
         botCount = Math.min(MAX_BOTS, botCount + 1);
         updateServerStats();
-        saveToHistory(formattedNumber, pairingCode);
-        
     } finally {
         setTimeout(() => {
             generateBtn.disabled = false;
@@ -126,28 +127,33 @@ async function generatePairCode() {
 }
 
 function displayPairingCode(code) {
-    let cleanCode = code.toString().toUpperCase();
+    let cleanCode = code.toString().toUpperCase().replace(/[^A-Z0-9]/g, '');
     
     if (cleanCode.length < 8) {
         while (cleanCode.length < 8) cleanCode += 'X';
-    } else if (cleanCode.length > 8) cleanCode = cleanCode.substring(0, 8);
+    }
     
-    const formattedCode = cleanCode.slice(0, 4) + '-' + cleanCode.slice(4);
-    document.getElementById('pairCode').textContent = formattedCode;
+    const formattedCode = cleanCode.slice(0, 4) + '-' + cleanCode.slice(4, 8);
+    const pairCodeEl = document.getElementById('pairCode');
+    if (pairCodeEl) pairCodeEl.textContent = formattedCode;
     
     const resultBox = document.getElementById('resultBox');
-    resultBox.classList.remove('show');
-    void resultBox.offsetWidth;
-    resultBox.classList.add('show');
-    
-    setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    if (resultBox) {
+        resultBox.classList.remove('show');
+        void resultBox.offsetWidth; // Trigger reflow
+        resultBox.classList.add('show');
+        setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
 }
 
 function copyPairCode() {
-    const code = document.getElementById('pairCode').textContent.replace('-', '');
+    const pairCodeEl = document.getElementById('pairCode');
+    if (!pairCodeEl) return;
+
+    const code = pairCodeEl.textContent.replace('-', '');
     
     navigator.clipboard.writeText(code).then(() => {
-        showSuccess('Code copied');
+        showSuccess('Code copied to clipboard');
         
         const copyBtn = document.getElementById('copyBtn');
         const originalText = copyBtn.innerHTML;
@@ -159,21 +165,29 @@ function copyPairCode() {
 
 function showError(message) {
     const errorEl = document.getElementById('errorAlert');
-    document.getElementById('errorText').textContent = message;
-    errorEl.classList.add('show');
-    setTimeout(() => errorEl.classList.remove('show'), 5000);
+    const errorText = document.getElementById('errorText');
+    if (errorEl && errorText) {
+        errorText.textContent = message;
+        errorEl.classList.add('show');
+        setTimeout(() => errorEl.classList.remove('show'), 5000);
+    }
 }
 
 function showSuccess(message) {
     const successEl = document.getElementById('successAlert');
-    document.getElementById('successText').textContent = message;
-    successEl.classList.add('show');
-    setTimeout(() => successEl.classList.remove('show'), 4000);
+    const successText = document.getElementById('successText');
+    if (successEl && successText) {
+        successText.textContent = message;
+        successEl.classList.add('show');
+        setTimeout(() => successEl.classList.remove('show'), 4000);
+    }
 }
 
 function hideAlerts() {
-    document.getElementById('errorAlert').classList.remove('show');
-    document.getElementById('successAlert').classList.remove('show');
+    const err = document.getElementById('errorAlert');
+    const succ = document.getElementById('successAlert');
+    if (err) err.classList.remove('show');
+    if (succ) succ.classList.remove('show');
 }
 
 function saveToHistory(phoneNumber, code) {
@@ -182,13 +196,16 @@ function saveToHistory(phoneNumber, code) {
         history.unshift({ phone: phoneNumber, code: code, time: new Date().toLocaleString('en-PK') });
         if (history.length > 50) history = history.slice(0, 50);
         localStorage.setItem('adeelmini_history', JSON.stringify(history));
-    } catch (error) {}
+    } catch (error) {
+        console.error("History Save Error:", error);
+    }
 }
 
+// Background simulation of server load
 setInterval(() => {
-    const change = Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0;
+    const change = Math.random() > 0.8 ? (Math.random() > 0.5 ? 1 : -1) : 0;
     if (change !== 0) {
-        botCount = Math.max(0, Math.min(MAX_BOTS, botCount + change));
+        botCount = Math.max(5, Math.min(MAX_BOTS, botCount + change));
         updateServerStats();
     }
 }, 15000);
