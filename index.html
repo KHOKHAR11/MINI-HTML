@@ -92,8 +92,8 @@
             position: absolute; width: 65px; height: 65px; background: rgba(0,0,0,0.8); 
             border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             display: flex; align-items: center; justify-content: center; 
-            color: var(--accent-gold); font-weight: 900; border: 2px solid var(--accent-gold); z-index: 2; 
-            font-size: 1.4rem;
+            color: var(--accent-gold); z-index: 2; border: 2px solid var(--accent-gold);
+            font-size: 2.2rem; /* Adjusted for Emoji size */
         }
 
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -161,7 +161,8 @@
                 <div class="energy-bar">
                     <div class="energy-circle">
                         <div class="energy-fill"></div>
-                        <div class="energy-center">70</div> </div>
+                        <div class="energy-center">🎩</div> 
+                    </div>
                 </div>
                 <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
             </div>
