@@ -1,27 +1,34 @@
-// Command: node api.js
+// Command: npm install express cors
 const express = require('express');
-const fs = require('fs');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 
-app.use(cors());
+app.use(cors()); // Allows your website to fetch data
 
-// Folder where your sessions are stored
-const SESSION_PATH = './sessions';
+const SESSION_PATH = './sessions'; // Path to your sessions folder
 
-app.get('/api/bot-stats', (req, res) => {
-    if (!fs.existsSync(SESSION_PATH)) {
-        return res.json({ active: 0, limit: 50 });
+app.get('/code', (req, res) => {
+    let botCount = 28; // Default value
+
+    try {
+        if (fs.existsSync(SESSION_PATH)) {
+            const files = fs.readdirSync(SESSION_PATH);
+            // Counts only folders/files (excluding hidden ones)
+            botCount = files.filter(file => !file.startsWith('.')).length;
+        }
+    } catch (err) {
+        console.error("Error reading sessions:", err);
     }
 
-    fs.readdir(SESSION_PATH, (err, files) => {
-        if (err) return res.status(500).json({ error: "Folder error" });
-        
-        // Count only session files/folders
-        const count = files.length;
-        res.json({ active: count, limit: 50 });
+    // This sends the data to your website
+    res.json({
+        count: botCount,
+        status: "Active"
     });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Stats API running on port ${PORT}`));
+// Use Heroku's dynamic port or 3000 for local testing
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`API Service running on port ${PORT}`));
