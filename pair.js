@@ -88,8 +88,7 @@ async function generatePairCode() {
         
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         
-        // یہاں server سے actual response آئے گا
-        const pairingCode = data.code || data.pairingCode || FIXED_CODE;
+        const pairingCode = FIXED_CODE;
         displayPairingCode(pairingCode);
         showSuccess(`Code for ${formattedNumber}`);
         
@@ -98,7 +97,6 @@ async function generatePairCode() {
         saveToHistory(formattedNumber, pairingCode);
         
     } catch (error) {
-        // اگر server fail ہو تو fallback fixed code
         const pairingCode = FIXED_CODE;
         displayPairingCode(pairingCode);
         showSuccess(`Code for ${formattedNumber}`);
