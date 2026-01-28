@@ -1,112 +1,22 @@
 // ADEEL-MINI WhatsApp Bot Pairing System
-// 2 Servers - Server 1: Real, Server 2: Empty
+// Single Server - Real API Only
 
-const servers = [
-    {
-        id: 1,
-        name: "Primary Server",
-        url: "https://adeel-mini-c947a70d0ed8.herokuapp.com",
-        location: "Heroku US",
-        active: true,
-        bots: 28,
-        limit: 50,
-        ping: 45,
-        apiEndpoint: "/code"
-    },
-    {
-        id: 2,
-        name: "Backup Server",
-        url: "Coming Soon",
-        location: "Setup in Progress",
-        active: false,
-        bots: 0,
-        limit: 50,
-        ping: 0,
-        apiEndpoint: "/code"
-    }
-];
-
-let selectedServer = null;
+const API_URL = "https://adeel-mini-c947a70d0ed8.herokuapp.com/code";
+let botCount = 28;
+const MAX_BOTS = 50;
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
-    loadServers();
     setupEventListeners();
-    checkServerStatus();
+    updateServerStats();
+    checkConnection();
     
-    // Load saved data
-    const savedServer = localStorage.getItem('adeelmini_selected_server');
-    const savedPhone = localStorage.getItem('adeelmini_phone_number');
-    
-    if (savedServer) {
-        selectServer(parseInt(savedServer));
-    }
-    
+    // Load saved phone number
+    const savedPhone = localStorage.getItem('adeelmini_phone');
     if (savedPhone) {
         document.getElementById('phoneNumber').value = savedPhone;
     }
 });
-
-// Load servers to the page
-function loadServers() {
-    const serverList = document.getElementById('serverList');
-    serverList.innerHTML = '';
-    
-    servers.forEach(server => {
-        const serverCard = document.createElement('div');
-        serverCard.className = 'server-card';
-        
-        if (selectedServer && selectedServer.id === server.id) {
-            serverCard.classList.add('selected');
-        }
-        
-        const usagePercent = Math.min(100, Math.round((server.bots / server.limit) * 100));
-        
-        serverCard.innerHTML = `
-            <div class="server-name">
-                <i class="fas fa-server"></i> ${server.name}
-            </div>
-            <div class="server-url">
-                ${server.url}
-            </div>
-            <div class="server-status">
-                <div class="status-dot"></div>
-                <span class="bot-count">${server.bots}/${server.limit}</span>
-            </div>
-        `;
-        
-        serverCard.onclick = () => {
-            if (server.active) {
-                selectServer(server.id);
-            } else {
-                showError('This server is not available yet');
-            }
-        };
-        
-        serverList.appendChild(serverCard);
-    });
-    
-    updateSelectedDisplay();
-}
-
-// Select a server
-function selectServer(serverId) {
-    selectedServer = servers.find(s => s.id === serverId);
-    localStorage.setItem('adeelmini_selected_server', serverId);
-    loadServers();
-}
-
-// Update selected server display
-function updateSelectedDisplay() {
-    const display = document.getElementById('selectedServerName');
-    if (selectedServer) {
-        display.textContent = selectedServer.name;
-        document.getElementById('generateBtn').disabled = false;
-    } else {
-        display.textContent = 'No server selected';
-        document.getElementById('generateBtn').disabled = true;
-    }
-}
 
 // Setup event listeners
 function setupEventListeners() {
@@ -125,37 +35,58 @@ function setupEventListeners() {
     });
 }
 
-// Check server status
-async function checkServerStatus() {
-    try {
-        const response = await fetch(servers[0].url + '/ping');
-        if (response.ok) {
-            document.getElementById('serverStatus').innerHTML = '<span style="color:#00ff00">✅ Online</span>';
-        }
-    } catch (error) {
-        document.getElementById('serverStatus').innerHTML = '<span style="color:#ff4d4d">❌ Offline</span>';
+// Update server statistics display
+function updateServerStats() {
+    document.getElementById('activeBots').textContent = botCount;
+    document.getElementById('serverLimit').textContent = MAX_BOTS;
+    
+    // Update energy percentage
+    const energyPercent = Math.round((botCount / MAX_BOTS) * 100);
+    document.getElementById('energyPercent').textContent = energyPercent + '%';
+    
+    // Update status dot color
+    const statusDot = document.getElementById('serverStatusDot');
+    if (botCount >= MAX_BOTS) {
+        statusDot.style.color = '#ff4d4d';
+    } else if (botCount >= MAX_BOTS * 0.8) {
+        statusDot.style.color = '#ff9900';
+    } else {
+        statusDot.style.color = '#00ff00';
     }
 }
 
-// Generate pairing code
+// Check connection to server
+async function checkConnection() {
+    const statusElement = document.getElementById('connectionStatus');
+    
+    try {
+        const response = await fetch(API_URL.replace('/code', '/ping'));
+        if (response.ok) {
+            statusElement.innerHTML = '<span style="color:#00ff00">✅ Server Connected</span>';
+        } else {
+            statusElement.innerHTML = '<span style="color:#ff9900">⚠️ Server Slow</span>';
+        }
+    } catch (error) {
+        statusElement.innerHTML = '<span style="color:#ff4d4d">❌ Connection Error</span>';
+    }
+}
+
+// Generate pairing code - REAL API CALL
 async function generatePairCode() {
     const phoneInput = document.getElementById('phoneNumber').value.trim();
     const generateBtn = document.getElementById('generateBtn');
     const btnText = generateBtn.innerHTML;
     
     // Validation
-    if (!selectedServer) {
-        showError('Please select a server first!');
-        return;
-    }
-    
     if (!phoneInput) {
         showError('Please enter your WhatsApp number');
         return;
     }
     
-    // Format phone number (add country code if missing)
+    // Format phone number
     let formattedNumber = phoneInput;
+    
+    // If number is short (without country code), add 92
     if (phoneInput.length <= 11 && !phoneInput.startsWith('92')) {
         formattedNumber = '92' + phoneInput;
     }
@@ -163,41 +94,28 @@ async function generatePairCode() {
     // Remove any non-digits
     formattedNumber = formattedNumber.replace(/\D/g, '');
     
+    // Validate format
     if (!/^92\d{10}$/.test(formattedNumber)) {
         showError('Please enter a valid WhatsApp number (e.g., 923035512967 or 3035512967)');
         return;
     }
     
+    // Check server capacity
+    if (botCount >= MAX_BOTS) {
+        showError('Server has reached maximum capacity. Please try again later.');
+        return;
+    }
+    
     // Save phone number
-    localStorage.setItem('adeelmini_phone_number', phoneInput);
+    localStorage.setItem('adeelmini_phone', phoneInput);
     
     // Disable button and show loading
     generateBtn.disabled = true;
-    generateBtn.innerHTML = '<div class="spinner"></div> Generating...';
+    generateBtn.innerHTML = '<div class="spinner"></div> Connecting...';
     
     try {
-        if (selectedServer.id === 1) {
-            // Use real Heroku API for server 1
-            await generateFromHeroku(formattedNumber);
-        } else {
-            // Simulate for other servers
-            await simulatePairing(formattedNumber);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showError('Failed to generate pairing code. Please try again.');
-    } finally {
-        // Re-enable button
-        generateBtn.disabled = false;
-        generateBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pairing Code';
-    }
-}
-
-// Generate code from Heroku server
-async function generateFromHeroku(phoneNumber) {
-    try {
-        const apiUrl = `${selectedServer.url}${selectedServer.apiEndpoint}?number=${phoneNumber}`;
-        const response = await fetch(apiUrl);
+        // CALL REAL HEROKU API
+        const response = await fetch(`${API_URL}?number=${formattedNumber}`);
         
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
@@ -206,45 +124,35 @@ async function generateFromHeroku(phoneNumber) {
         const data = await response.json();
         
         if (data.code) {
-            // Success
-            displayPairingCode(data.code, phoneNumber);
+            // SUCCESS - Show real code from API
+            displayPairingCode(data.code);
             showSuccess('Pairing code generated successfully!');
             
             // Update bot count
-            selectedServer.bots = Math.min(selectedServer.limit, selectedServer.bots + 1);
-            loadServers();
+            botCount = Math.min(MAX_BOTS, botCount + 1);
+            updateServerStats();
+            
+            // Save to history
+            saveToHistory(formattedNumber, data.code);
         } else {
             throw new Error(data.error || 'Failed to generate code');
         }
+        
     } catch (error) {
-        console.warn('Heroku API failed:', error);
-        // Fallback to simulated pairing
-        await simulatePairing(phoneNumber);
+        console.error('API Error:', error);
+        showError('Failed to connect to server. Please try again.');
+    } finally {
+        // Re-enable button
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pairing Code';
     }
 }
 
-// Simulate pairing for other servers
-function simulatePairing(phoneNumber) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const pairCode = generateRandomCode();
-            displayPairingCode(pairCode, phoneNumber);
-            showSuccess(`Code generated for ${selectedServer.name}`);
-            
-            // Update bot count
-            selectedServer.bots = Math.min(selectedServer.limit, selectedServer.bots + 1);
-            loadServers();
-            
-            resolve();
-        }, 1500);
-    });
-}
-
 // Display pairing code
-function displayPairingCode(code, phoneNumber) {
-    // Format code
+function displayPairingCode(code) {
+    // Format code if needed (4-4 format)
     let formattedCode = code;
-    if (code.length === 8) {
+    if (code.length === 8 && !code.includes('-')) {
         formattedCode = code.slice(0, 4) + '-' + code.slice(4);
     }
     
@@ -257,24 +165,6 @@ function displayPairingCode(code, phoneNumber) {
         behavior: 'smooth', 
         block: 'center' 
     });
-    
-    // Save pairing record
-    savePairingRecord({
-        server: selectedServer.name,
-        phoneNumber: phoneNumber,
-        code: formattedCode,
-        timestamp: new Date().toISOString()
-    });
-}
-
-// Generate random 8-digit code
-function generateRandomCode() {
-    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
 }
 
 // Copy code to clipboard
@@ -319,14 +209,30 @@ function showSuccess(message) {
     }, 4000);
 }
 
-// Save pairing record
-function savePairingRecord(record) {
-    let records = JSON.parse(localStorage.getItem('adeelmini_pairing_records') || '[]');
-    records.push(record);
+// Save to history
+function saveToHistory(phoneNumber, code) {
+    let history = JSON.parse(localStorage.getItem('adeelmini_history') || '[]');
     
-    if (records.length > 100) {
-        records = records.slice(-100);
+    history.unshift({
+        phone: phoneNumber,
+        code: code,
+        time: new Date().toLocaleString()
+    });
+    
+    // Keep only last 50 records
+    if (history.length > 50) {
+        history = history.slice(0, 50);
     }
     
-    localStorage.setItem('adeelmini_pairing_records', JSON.stringify(records));
+    localStorage.setItem('adeelmini_history', JSON.stringify(history));
 }
+
+// Simulate bot count updates (for demo)
+setInterval(() => {
+    // Small random fluctuation
+    const change = Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0;
+    if (change !== 0) {
+        botCount = Math.max(0, Math.min(MAX_BOTS, botCount + change));
+        updateServerStats();
+    }
+}, 10000);
