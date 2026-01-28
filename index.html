@@ -8,95 +8,204 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-primary: #800000; /* Maroon Main */
+            --bg-primary: #800000;
             --bg-secondary: #660000;
-            --bg-card: rgba(102, 0, 0, 0.85);
-            --accent-gold: #ffd700; /* Gold Accent */
+            --bg-card: rgba(102, 0, 0, 0.9);
+            --accent-gold: #ffd700;
             --text-primary: #ffffff;
-            --text-secondary: #f0f0f0;
-            --border-color: rgba(255, 215, 0, 0.3);
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(255, 215, 0, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: var(--bg-primary);
+            background: linear-gradient(135deg, #800000 0%, #660000 100%);
             color: var(--text-primary);
             min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
             max-width: 500px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             padding: 20px;
         }
 
         .logo {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
             color: var(--accent-gold);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
         .logo i {
-            font-size: 2.8rem;
+            font-size: 3rem;
         }
 
         .tagline {
             color: var(--text-secondary);
             font-size: 1rem;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
+        /* Circular Energy Bar */
+        .energy-bar {
+            width: 80px;
+            height: 80px;
+            margin: 15px auto;
+            position: relative;
+        }
+
+        .energy-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--accent-gold);
+        }
+
+        .energy-fill {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                var(--accent-gold) 0%,
+                var(--accent-gold) 70%,
+                transparent 70%,
+                transparent 100%
+            );
+            border-radius: 50%;
+            animation: rotateEnergy 2s linear infinite;
+        }
+
+        .energy-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid var(--accent-gold);
+        }
+
+        @keyframes rotateEnergy {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Server Cards */
+        .servers-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .server-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 15px;
+            width: 150px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .server-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .server-card.selected {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .server-name {
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .server-url {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            word-break: break-all;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .bot-count {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* Main Card */
         .card {
             background: var(--bg-card);
             border: 2px solid var(--border-color);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
         .section-title {
             color: var(--accent-gold);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .server-info {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .server-name {
-            color: var(--accent-gold);
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        .server-url {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
-
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
@@ -104,6 +213,7 @@
             margin-bottom: 8px;
             color: var(--text-secondary);
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .phone-input {
@@ -111,21 +221,10 @@
             gap: 10px;
         }
 
-        .country-code {
-            background: rgba(0,0,0,0.2);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            color: var(--accent-gold);
-            font-weight: 700;
-            min-width: 70px;
-            text-align: center;
-        }
-
         input[type="tel"] {
             flex: 1;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.3);
             border: 2px solid var(--border-color);
             border-radius: 10px;
             color: #fff;
@@ -135,6 +234,13 @@
 
         input[type="tel"]:focus {
             border-color: var(--accent-gold);
+        }
+
+        .input-hint {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: block;
         }
 
         .btn {
@@ -152,11 +258,12 @@
             justify-content: center;
             gap: 10px;
             transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
         }
 
         .btn:disabled {
@@ -165,8 +272,9 @@
             transform: none;
         }
 
+        /* Result Box */
         .result-box {
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.4);
             border: 2px dashed var(--accent-gold);
             border-radius: 15px;
             padding: 25px;
@@ -186,32 +294,78 @@
         }
 
         .pair-code {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 900;
             letter-spacing: 8px;
             color: var(--accent-gold);
             margin: 20px 0;
             font-family: 'Courier New', monospace;
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
             border: 2px solid var(--border-color);
+            word-break: break-all;
         }
 
         .copy-btn {
             background: transparent;
             border: 2px solid var(--accent-gold);
             color: var(--accent-gold);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 25px;
+            border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
             margin-top: 15px;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .copy-btn:hover {
-            background: rgba(255,215,0,0.1);
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .instructions h4 {
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(128, 0, 0, 0.3);
+            border-top-color: #800000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .alert {
@@ -225,87 +379,62 @@
 
         .alert.show {
             display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .alert-error {
-            background: rgba(255,0,0,0.1);
+            background: rgba(255, 0, 0, 0.1);
             border-left: 5px solid #ff4d4d;
             color: #ffcccc;
         }
 
         .alert-success {
-            background: rgba(255,215,0,0.1);
+            background: rgba(255, 215, 0, 0.1);
             border-left: 5px solid var(--accent-gold);
             color: #fff;
-        }
-
-        .instructions {
-            background: rgba(0,0,0,0.2);
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .instructions h4 {
-            color: var(--accent-gold);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .instructions ol {
-            padding-left: 20px;
-            color: var(--text-secondary);
-        }
-
-        .instructions li {
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(128,0,0,0.3);
-            border-top-color: #800000;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         .footer {
             text-align: center;
             margin-top: 40px;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             opacity: 0.7;
+            padding: 15px;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 15px;
+                padding: 10px;
             }
             
             .logo {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            .servers-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .server-card {
+                width: 100%;
+                max-width: 250px;
             }
             
             .pair-code {
-                font-size: 1.8rem;
+                font-size: 2rem;
                 letter-spacing: 5px;
+                padding: 15px;
             }
             
             .phone-input {
                 flex-direction: column;
-            }
-            
-            .country-code {
-                width: 100%;
             }
         }
     </style>
@@ -316,38 +445,46 @@
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
             </div>
-            <div class="tagline">WhatsApp Bot Pairing System</div>
-        </div>
-
-        <div class="card">
-            <div class="section-title">
-                <i class="fas fa-server"></i> Deployment Server
-            </div>
+            <div class="tagline">Professional WhatsApp Bot Pairing System</div>
             
-            <div class="server-info">
-                <div class="server-name">ADEEL-MINI Primary Server</div>
-                <div class="server-url">https://adeel-mini-c947a70d0ed8.herokuapp.com</div>
-                <div style="margin-top: 10px; color: #00ff00; font-size: 0.9rem;">
-                    <i class="fas fa-circle"></i> Online & Ready
+            <div class="energy-bar">
+                <div class="energy-circle">
+                    <div class="energy-fill"></div>
+                    <div class="energy-center">70%</div>
                 </div>
             </div>
+        </div>
 
-            <div class="section-title" style="margin-top: 30px;">
+        <!-- Server Selection -->
+        <div class="card">
+            <div class="section-title">
+                <i class="fas fa-server"></i> Select Server
+            </div>
+            
+            <div class="servers-container" id="serverList">
+                <!-- Servers will be loaded here by JavaScript -->
+            </div>
+            
+            <div style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-top: 10px;">
+                <i class="fas fa-info-circle"></i> Selected: <span id="selectedServerName">No server selected</span>
+            </div>
+        </div>
+
+        <!-- Pairing Section -->
+        <div class="card">
+            <div class="section-title">
                 <i class="fas fa-link"></i> Generate Pairing Code
             </div>
 
             <div class="input-group">
                 <label>Enter your WhatsApp number:</label>
-                <div class="phone-input">
-                    <div class="country-code" id="countryCode">+92</div>
-                    <input type="tel" id="phoneNumber" placeholder="3035512967" maxlength="11">
-                </div>
-                <small style="color: var(--text-secondary); display: block; margin-top: 5px;">
-                    Example: 92 for Pakistan (923XXXXXXXXX)
-                </small>
+                <input type="tel" id="phoneNumber" placeholder="923035512967 or 3035512967" maxlength="15">
+                <span class="input-hint">
+                    <i class="fas fa-lightbulb"></i> Enter with or without country code
+                </span>
             </div>
 
-            <button class="btn" id="generateBtn" onclick="generatePairCode()">
+            <button class="btn" id="generateBtn">
                 <i class="fas fa-key"></i> Generate Pairing Code
             </button>
 
@@ -358,11 +495,11 @@
                 
                 <div class="pair-code" id="pairCode">--------</div>
                 
-                <div style="color: var(--text-secondary); margin: 15px 0; font-size: 0.9rem;">
+                <div style="color: var(--text-secondary); margin: 15px 0; font-size: 0.85rem;">
                     <i class="fas fa-clock"></i> Expires in 60 seconds
                 </div>
 
-                <button class="copy-btn" onclick="copyPairCode()">
+                <button class="copy-btn" id="copyBtn">
                     <i class="far fa-copy"></i> Copy Code
                 </button>
             </div>
@@ -378,154 +515,22 @@
         <div class="instructions">
             <h4><i class="fas fa-info-circle"></i> How to Use:</h4>
             <ol>
-                <li>Enter your WhatsApp number with country code</li>
+                <li>Select a server from above</li>
+                <li>Enter your WhatsApp number (with or without country code)</li>
                 <li>Click "Generate Pairing Code"</li>
-                <li>Open WhatsApp on your phone</li>
-                <li>Go to Settings → Linked Devices</li>
+                <li>Open WhatsApp → Settings → Linked Devices</li>
                 <li>Tap "Link a Device"</li>
                 <li>Enter the 8-digit code shown above</li>
-                <li>Your ADEEL-MINI bot will be ready in seconds!</li>
+                <li>Your ADEEL-MINI bot will be ready!</li>
             </ol>
         </div>
 
         <div class="footer">
             <p>© 2025 ADEEL-MINI | Support: 923035512967</p>
-            <p>Server Status: <span id="serverStatus">Checking...</span></p>
+            <p>System Status: <span id="serverStatus">Checking...</span></p>
         </div>
     </div>
 
-    <script>
-        const API_URL = "https://adeel-mini-c947a70d0ed8.herokuapp.com/code";
-        let countryCode = "92";
-
-        // Check server status on load
-        async function checkServerStatus() {
-            try {
-                const response = await fetch(API_URL + "?ping=true");
-                if (response.ok) {
-                    document.getElementById('serverStatus').innerHTML = '<span style="color:#00ff00">✅ Online</span>';
-                } else {
-                    document.getElementById('serverStatus').innerHTML = '<span style="color:#ff9900">⚠️ Checking...</span>';
-                }
-            } catch (error) {
-                document.getElementById('serverStatus').innerHTML = '<span style="color:#ff4d4d">❌ Offline</span>';
-            }
-        }
-
-        // Generate pairing code
-        async function generatePairCode() {
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const generateBtn = document.getElementById('generateBtn');
-            const btnText = generateBtn.innerHTML;
-
-            // Validation
-            if (!phoneNumber || !/^\d{9,11}$/.test(phoneNumber)) {
-                showError('Please enter a valid WhatsApp number (9-11 digits)');
-                return;
-            }
-
-            // Disable button and show loading
-            generateBtn.disabled = true;
-            generateBtn.innerHTML = '<div class="spinner"></div> Generating...';
-
-            // Full phone number
-            const fullNumber = countryCode + phoneNumber;
-
-            try {
-                // Call your Heroku API
-                const response = await fetch(`${API_URL}?number=${fullNumber}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Server error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.code) {
-                    // Show success
-                    document.getElementById('pairCode').textContent = data.code;
-                    document.getElementById('resultBox').classList.add('show');
-                    showSuccess('Pairing code generated successfully!');
-                    
-                    // Scroll to result
-                    document.getElementById('resultBox').scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                } else {
-                    throw new Error(data.error || 'Failed to generate code');
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                showError('Failed to generate pairing code. Please try again.');
-            } finally {
-                // Re-enable button
-                generateBtn.disabled = false;
-                generateBtn.innerHTML = btnText;
-            }
-        }
-
-        // Copy code to clipboard
-        function copyPairCode() {
-            const code = document.getElementById('pairCode').textContent;
-            
-            navigator.clipboard.writeText(code).then(() => {
-                showSuccess('Code copied to clipboard!');
-                
-                // Visual feedback
-                const copyBtn = document.querySelector('.copy-btn');
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                copyBtn.style.background = 'rgba(0,255,0,0.1)';
-                
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                    copyBtn.style.background = 'transparent';
-                }, 2000);
-            }).catch(err => {
-                showError('Failed to copy. Please copy manually.');
-            });
-        }
-
-        // Show error message
-        function showError(message) {
-            const errorEl = document.getElementById('errorAlert');
-            document.getElementById('errorText').textContent = message;
-            errorEl.classList.add('show');
-            
-            setTimeout(() => {
-                errorEl.classList.remove('show');
-            }, 5000);
-        }
-
-        // Show success message
-        function showSuccess(message) {
-            const successEl = document.getElementById('successAlert');
-            document.getElementById('successText').textContent = message;
-            successEl.classList.add('show');
-            
-            setTimeout(() => {
-                successEl.classList.remove('show');
-            }, 4000);
-        }
-
-        // Change country code
-        function changeCountryCode() {
-            const newCode = prompt("Enter country code (without +):", countryCode);
-            if (newCode && /^\d{1,3}$/.test(newCode)) {
-                countryCode = newCode;
-                document.getElementById('countryCode').textContent = '+' + countryCode;
-            } else if (newCode !== null) {
-                alert("Please enter a valid country code (1-3 digits)");
-            }
-        }
-
-        // Allow clicking country code to change it
-        document.getElementById('countryCode').onclick = changeCountryCode;
-
-        // Check server status on page load
-        checkServerStatus();
-    </script>
+    <script src="pair.js"></script>
 </body>
 </html>
