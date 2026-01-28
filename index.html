@@ -8,31 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            --bg-primary: #800000;
+            --bg-secondary: #660000;
+            --bg-card: rgba(102, 0, 0, 0.9);
             --accent-gold: #ffd700;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.8);
             --border-color: rgba(255, 215, 0, 0.4);
-            --bg-card: rgba(0, 0, 0, 0.6); /* Transparent dark for visibility */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* --- 9 SECOND PER COLOR BACKGROUND ANIMATION --- */
-        @keyframes slowBGChange {
-            0% { background-color: #800000; }   /* Maroon */
-            25% { background-color: #000033; }  /* Dark Blue */
-            50% { background-color: #2d004d; }  /* Deep Purple */
-            75% { background-color: #1a1a1a; }  /* Dark Grey/Black */
-            100% { background-color: #800000; } /* Back to Maroon */
-        }
-
         body {
             font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #800000 0%, #660000 100%);
             color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
-            animation: slowBGChange 36s infinite ease-in-out; /* 9s x 4 colors = 36s total */
-            transition: background-color 9s ease; /* Smooth fade effect */
         }
 
         .container { max-width: 450px; margin: 0 auto; }
@@ -108,7 +100,7 @@
         }
 
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .energy-center { position: absolute; width: 60px; height: 60px; background: rgba(128, 0, 0, 0.8); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; color: var(--accent-gold); font-weight: 900; border: 2px solid var(--accent-gold); z-index: 2; }
+        .energy-center { position: absolute; width: 60px; height: 60px; background: var(--bg-primary); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; color: var(--accent-gold); font-weight: 900; border: 2px solid var(--accent-gold); z-index: 2; }
 
         /* Music Button Styling */
         .music-btn {
@@ -139,30 +131,26 @@
             100% { transform: scale(1); }
         }
 
-        /* --- CARDS & UI ELEMENTS --- */
-        .server-card, .main-card, .instructions {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
-        }
-
+        /* --- ORIGINAL STYLE SECTION --- */
+        .server-card { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 15px; padding: 20px; margin-bottom: 25px; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
         .server-name { color: var(--accent-gold); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .server-stats { display: flex; justify-content: space-around; }
+        .server-stats { display: flex; justify-content: space-around; margin-top: 15px; }
         .stat-value { color: var(--accent-gold); font-weight: 800; font-size: 1.5rem; display: block; }
-        .stat-label { color: var(--text-secondary); font-size: 0.8rem; }
-
-        input[type="tel"] { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; text-align: center; }
-        .btn { width: 100%; padding: 16px; background: var(--accent-gold); color: #800000; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .stat-label { color: var(--text-secondary); font-size: 0.8rem; margin-top: 5px; }
+        .main-card { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
+        .section-title { color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        input[type="tel"] { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 2px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; }
+        .btn { width: 100%; padding: 16px; background: var(--accent-gold); color: #800000; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; margin-top: 10px; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4); }
-
-        .pair-code { font-size: 2.5rem; font-weight: 900; letter-spacing: 5px; color: var(--accent-gold); background: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 12px; border: 2px solid var(--border-color); margin: 20px 0; }
-        .copy-btn { background: transparent; border: 2px solid var(--accent-gold); color: var(--accent-gold); padding: 10px 20px; border-radius: 10px; cursor: pointer; }
-        .footer { text-align: center; margin-top: 40px; color: var(--text-secondary); font-size: 0.8rem; opacity: 0.8; }
+        .result-box { background: rgba(0, 0, 0, 0.4); border: 2px dashed var(--accent-gold); border-radius: 15px; padding: 25px; margin-top: 20px; text-align: center; display: none; }
+        .result-box.show { display: block; animation: fadeIn 0.5s ease; }
+        .pair-code { font-size: 2.5rem; font-weight: 900; letter-spacing: 8px; color: var(--accent-gold); margin: 20px 0; font-family: 'Courier New', monospace; background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 12px; border: 2px solid var(--border-color); word-break: break-all; }
+        .copy-btn { background: transparent; border: 2px solid var(--accent-gold); color: var(--accent-gold); padding: 12px 25px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; }
+        .instructions { background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px solid var(--border-color); }
+        .instructions ol { padding-left: 20px; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+        .alert { padding: 15px; border-radius: 10px; margin-top: 15px; display: none; align-items: center; gap: 10px; }
+        .alert.show { display: flex; }
+        .footer { text-align: center; margin-top: 40px; color: var(--text-secondary); font-size: 0.8rem; opacity: 0.7; padding: 15px; }
     </style>
 </head>
 <body>
@@ -177,7 +165,10 @@
             </div>
             
             <div class="energy-wrapper">
-                <button class="music-btn" onclick="toggleMusic('music1', this)"><i class="fas fa-play"></i></button>
+                <button class="music-btn" onclick="toggleMusic('music1', this)">
+                    <i class="fas fa-play"></i>
+                </button>
+
                 <div class="energy-bar">
                     <div class="energy-circle">
                         <div class="energy-fill"></div>
@@ -188,7 +179,10 @@
                         <div class="sparkle" style="--x: -40px; --y: -40px;"></div>
                     </div>
                 </div>
-                <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
+
+                <button class="music-btn" onclick="toggleMusic('music2', this)">
+                    <i class="fas fa-play"></i>
+                </button>
             </div>
         </div>
 
@@ -206,19 +200,21 @@
 
         <div class="main-card">
             <div class="section-title"><i class="fas fa-link"></i> Generate Pairing Code</div>
-            <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX" maxlength="15">
+            <div class="input-group">
+                <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX" maxlength="15">
+            </div>
             <button class="btn" id="generateBtn"><i class="fas fa-key"></i> Generate Pairing Code</button>
-            <div class="result-box" id="resultBox" style="display:none; margin-top:20px; animation: fadeIn 0.5s ease;">
-                <div class="pair-code" id="pairCode" style="word-break: break-all;">--------</div>
-                <button class="copy-btn" id="copyBtn" style="width: 100%; margin-top: 10px; font-weight: bold;">Copy Code</button>
+            <div class="result-box" id="resultBox">
+                <div class="pair-code" id="pairCode">--------</div>
+                <button class="copy-btn" id="copyBtn"><i class="far fa-copy"></i> Copy Code</button>
             </div>
         </div>
 
         <div class="instructions">
             <h4>How to Use:</h4>
-            <ol style="text-align:left; padding-left:20px;">
+            <ol>
                 <li>Enter your number with country code.</li>
-                <li>Go to WhatsApp -> Linked Devices -> Link with Phone Number.</li>
+                <li>Go to WhatsApp Settings -> Linked Devices.</li>
             </ol>
         </div>
 
@@ -232,9 +228,15 @@
             const music = document.getElementById(id);
             const allAudios = document.querySelectorAll('audio');
             const allBtns = document.querySelectorAll('.music-btn');
+
             if (music.paused) {
+                // Pause other music first
                 allAudios.forEach(a => a.pause());
-                allBtns.forEach(b => { b.classList.remove('playing'); b.innerHTML = '<i class="fas fa-play"></i>'; });
+                allBtns.forEach(b => {
+                    b.classList.remove('playing');
+                    b.innerHTML = '<i class="fas fa-play"></i>';
+                });
+
                 music.play();
                 btn.classList.add('playing');
                 btn.innerHTML = '<i class="fas fa-pause"></i>';
