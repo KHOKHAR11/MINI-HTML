@@ -1,11 +1,12 @@
 const API_URL = "https://adeel-mini-c947a70d0ed8.herokuapp.com/code";
+let botCount = 28; // Default starting count
 const MAX_BOTS = 50;
 const FIXED_CODE = "ADEEL1MD";
-let botCount = 28; // Default count
 
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
-    syncHerokuStats(); // Start live sync
+    updateServerStats(); // Initialize UI
+    syncWithHeroku();    // Fetch live data from API
     
     const savedPhone = localStorage.getItem('adeelmini_phone');
     if (savedPhone) {
@@ -13,42 +14,53 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function setupEventListeners() {
-    const generateBtn = document.getElementById('generateBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    
-    if(generateBtn) generateBtn.addEventListener('click', generatePairCode);
-    if(copyBtn) copyBtn.addEventListener('click', copyPairCode);
-}
-
-// --- LIVE SYNC FROM HEROKU ---
-async function syncHerokuStats() {
+// --- FETCH LIVE COUNT FROM API ---
+async function syncWithHeroku() {
     try {
         const response = await fetch(API_URL);
         if (response.ok) {
             const data = await response.json();
-            botCount = data.count || 28;
-            updateUI();
+            if (data.count) {
+                botCount = data.count; 
+                updateServerStats();
+            }
         }
     } catch (error) {
-        console.log("Heroku Sync Offline: Using Default");
-        updateUI();
+        console.error("Heroku Sync Error: Using local state");
+        updateServerStats();
     }
 }
 
-function updateUI() {
-    const activeEl = document.getElementById('activeCount');
-    const limitEl = document.getElementById('limitCount');
-    const energyText = document.getElementById('energyText');
+function setupEventListeners() {
+    const generateBtn = document.getElementById('generateBtn');
+    const phoneInput = document.getElementById('phoneNumber');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    if(generateBtn) generateBtn.addEventListener('click', generatePairCode);
+    if(copyBtn) copyBtn.addEventListener('click', copyPairCode);
+    
+    if(phoneInput) {
+        phoneInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generatePairCode();
+        });
+    }
+}
+
+function updateServerStats() {
+    // Matching your HTML IDs: activeCount, limitCount, energyText, energyFill
+    const activeBotsEl = document.getElementById('activeCount');
+    const serverLimitEl = document.getElementById('limitCount');
+    const energyPercentEl = document.getElementById('energyText');
     const energyFill = document.getElementById('energyFill');
 
-    const percentage = Math.round((botCount / MAX_BOTS) * 100);
-
-    if(activeEl) activeEl.innerText = botCount;
-    if(limitEl) limitEl.innerText = MAX_BOTS;
-    if(energyText) energyText.innerText = percentage + "%";
+    if(activeBotsEl) activeBotsEl.textContent = botCount;
+    if(serverLimitEl) serverLimitEl.textContent = MAX_BOTS;
+    
+    const energyPercent = Math.round((botCount / MAX_BOTS) * 100);
+    if(energyPercentEl) energyPercentEl.textContent = energyPercent + '%';
+    
     if(energyFill) {
-        energyFill.style.background = `conic-gradient(#ffd700 ${percentage}%, transparent 0%)`;
+        energyFill.style.background = `conic-gradient(var(--accent-gold) ${energyPercent}%, transparent 0%)`;
     }
 }
 
@@ -61,24 +73,40 @@ async function generatePairCode() {
         return;
     }
     
+    // Original Formatting Logic
+    let formattedNumber = phoneInput.replace(/\D/g, '');
+    if (formattedNumber.startsWith('0')) {
+        formattedNumber = '92' + formattedNumber.substring(1);
+    } else if (formattedNumber.length === 10) {
+        formattedNumber = '92' + formattedNumber;
+    }
+    
+    localStorage.setItem('adeelmini_phone', phoneInput);
+    
     generateBtn.disabled = true;
-    generateBtn.innerHTML = 'Generating...';
+    generateBtn.innerHTML = '<div class="spinner"></div> Generating...';
     
     try {
-        const response = await fetch(`${API_URL}?number=${phoneInput}`);
+        const response = await fetch(`${API_URL}?number=${formattedNumber}`);
+
         if (response.ok) {
             const data = await response.json();
             const pairingCode = data.code || data.pairCode || FIXED_CODE;
             displayPairingCode(pairingCode);
-            syncHerokuStats(); // Refresh count
+            
+            // Refresh count after new bot is added
+            syncWithHeroku();
         } else {
-            throw new Error();
+            throw new Error('API Error');
         }
+        
     } catch (error) {
         displayPairingCode(FIXED_CODE);
     } finally {
-        generateBtn.disabled = false;
-        generateBtn.innerHTML = 'Generate Now';
+        setTimeout(() => {
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pairing Code';
+        }, 1500);
     }
 }
 
@@ -90,10 +118,13 @@ function displayPairingCode(code) {
 }
 
 function copyPairCode() {
-    const code = document.getElementById('pairCode').textContent;
-    navigator.clipboard.writeText(code).then(() => {
+    const pairCodeEl = document.getElementById('pairCode');
+    if (!pairCodeEl) return;
+    
+    navigator.clipboard.writeText(pairCodeEl.textContent).then(() => {
         alert('Code copied to clipboard');
     });
 }
 
-setInterval(syncHerokuStats, 30000); // Auto update every 30s
+// Auto-refresh stats every 30 seconds
+setInterval(syncWithHeroku, 30000);
