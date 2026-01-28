@@ -88,7 +88,7 @@ async function generatePairCode() {
         
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         
-        const pairingCode = FIXED_CODE;
+        const pairingCode = data.code || FIXED_CODE;
         displayPairingCode(pairingCode);
         showSuccess(`Code for ${formattedNumber}`);
         
