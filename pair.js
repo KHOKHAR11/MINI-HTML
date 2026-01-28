@@ -1,11 +1,11 @@
 const API_URL = "https://adeel-mini-c947a70d0ed8.herokuapp.com/code";
-let botCount = 28; // Default starting count
 const MAX_BOTS = 50;
 const FIXED_CODE = "ADEEL1MD";
+let botCount = 28; // Default count
 
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
-    syncWithHeroku(); // Load live data on start
+    syncHerokuStats(); // Start live sync
     
     const savedPhone = localStorage.getItem('adeelmini_phone');
     if (savedPhone) {
@@ -13,46 +13,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// --- LIVE SYNC LOGIC ---
-async function syncWithHeroku() {
-    try {
-        const response = await fetch(API_URL);
-        if (response.ok) {
-            const data = await response.json();
-            if (data.count) {
-                botCount = data.count;
-                updateServerStats();
-            }
-        }
-    } catch (error) {
-        console.log("Using local count mode");
-        updateServerStats();
-    }
-}
-
 function setupEventListeners() {
     const generateBtn = document.getElementById('generateBtn');
     const copyBtn = document.getElementById('copyBtn');
     
-    generateBtn.addEventListener('click', generatePairCode);
-    copyBtn.addEventListener('click', copyPairCode);
+    if(generateBtn) generateBtn.addEventListener('click', generatePairCode);
+    if(copyBtn) copyBtn.addEventListener('click', copyPairCode);
 }
 
-function updateServerStats() {
-    // Sync with your HTML IDs
-    const activeBotsEl = document.getElementById('activeCount');
-    const serverLimitEl = document.getElementById('limitCount');
-    const energyPercentEl = document.getElementById('energyText');
+// --- LIVE SYNC FROM HEROKU ---
+async function syncHerokuStats() {
+    try {
+        const response = await fetch(API_URL);
+        if (response.ok) {
+            const data = await response.json();
+            botCount = data.count || 28;
+            updateUI();
+        }
+    } catch (error) {
+        console.log("Heroku Sync Offline: Using Default");
+        updateUI();
+    }
+}
+
+function updateUI() {
+    const activeEl = document.getElementById('activeCount');
+    const limitEl = document.getElementById('limitCount');
+    const energyText = document.getElementById('energyText');
     const energyFill = document.getElementById('energyFill');
 
-    if(activeBotsEl) activeBotsEl.textContent = botCount;
-    if(serverLimitEl) serverLimitEl.textContent = MAX_BOTS;
-    
-    const energyPercent = Math.round((botCount / MAX_BOTS) * 100);
-    
-    if(energyPercentEl) energyPercentEl.textContent = energyPercent + '%';
+    const percentage = Math.round((botCount / MAX_BOTS) * 100);
+
+    if(activeEl) activeEl.innerText = botCount;
+    if(limitEl) limitEl.innerText = MAX_BOTS;
+    if(energyText) energyText.innerText = percentage + "%";
     if(energyFill) {
-        energyFill.style.background = `conic-gradient(var(--accent-gold) ${energyPercent}%, transparent 0%)`;
+        energyFill.style.background = `conic-gradient(#ffd700 ${percentage}%, transparent 0%)`;
     }
 }
 
@@ -60,20 +56,24 @@ async function generatePairCode() {
     const phoneInput = document.getElementById('phoneNumber').value.trim();
     const generateBtn = document.getElementById('generateBtn');
     
-    if (!phoneInput) return;
+    if (!phoneInput) {
+        alert('Please enter WhatsApp number');
+        return;
+    }
     
-    let formattedNumber = phoneInput.replace(/\D/g, '');
     generateBtn.disabled = true;
     generateBtn.innerHTML = 'Generating...';
     
     try {
-        const response = await fetch(`${API_URL}?number=${formattedNumber}`);
-        const data = await response.json();
-        const pairingCode = data.code || data.pairCode || FIXED_CODE;
-        
-        displayPairingCode(pairingCode);
-        syncWithHeroku(); // Refresh count after generating
-        
+        const response = await fetch(`${API_URL}?number=${phoneInput}`);
+        if (response.ok) {
+            const data = await response.json();
+            const pairingCode = data.code || data.pairCode || FIXED_CODE;
+            displayPairingCode(pairingCode);
+            syncHerokuStats(); // Refresh count
+        } else {
+            throw new Error();
+        }
     } catch (error) {
         displayPairingCode(FIXED_CODE);
     } finally {
@@ -85,16 +85,15 @@ async function generatePairCode() {
 function displayPairingCode(code) {
     const pairCodeEl = document.getElementById('pairCode');
     const resultBox = document.getElementById('resultBox');
-    
     if (pairCodeEl) pairCodeEl.textContent = code;
     if (resultBox) resultBox.classList.add('show');
 }
 
 function copyPairCode() {
     const code = document.getElementById('pairCode').textContent;
-    navigator.clipboard.writeText(code);
-    alert('Code Copied!');
+    navigator.clipboard.writeText(code).then(() => {
+        alert('Code copied to clipboard');
+    });
 }
 
-// Auto refresh every 60 seconds
-setInterval(syncWithHeroku, 60000);
+setInterval(syncHerokuStats, 30000); // Auto update every 30s
