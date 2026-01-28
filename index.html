@@ -71,20 +71,21 @@
             animation: slowColorChange 35s infinite linear;
         }
 
-        /* --- UPDATED SHOKH SPARKLES (Fireworks Style) --- */
+        /* --- SHOKH FIREWORKS SPARKLES --- */
         @keyframes fireworkBurst {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--nx), var(--ny)) scale(0); opacity: 0; }
+            0% { transform: translate(0, 0) scale(1.5); opacity: 1; filter: brightness(200%); }
+            100% { transform: translate(var(--nx), var(--ny)) scale(0); opacity: 0; filter: brightness(100%); }
         }
 
         .name-sparkle, .sparkle-particle {
             position: absolute; 
-            width: 6px; 
-            height: 6px; 
+            width: 7px; 
+            height: 7px; 
             border-radius: 50%; 
             pointer-events: none; 
-            animation: fireworkBurst 1.8s infinite ease-out;
-            box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+            animation: fireworkBurst 1.5s infinite ease-out;
+            /* Shokh Glow Effect */
+            box-shadow: 0 0 12px currentColor, 0 0 25px currentColor, 0 0 35px #fff;
         }
 
         /* --- ENERGY BAR & MUSIC --- */
@@ -151,11 +152,11 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 90px; --ny: -60px; color: #ff0000; left: 10%;"></div>
-                <div class="name-sparkle" style="--nx: -90px; --ny: 60px; color: #00ff00; right: 10%;"></div>
-                <div class="name-sparkle" style="--nx: 50px; --ny: 80px; color: #ffd700; left: 50%;"></div>
-                <div class="name-sparkle" style="--nx: -50px; --ny: -80px; color: #00ffff; right: 50%;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -90px; color: #ff00ff; top: 0;"></div>
+                <div class="name-sparkle" style="--nx: 110px; --ny: -70px; color: #ff0044; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -110px; --ny: 70px; color: #00ff66; right: 10%;"></div>
+                <div class="name-sparkle" style="--nx: 70px; --ny: 100px; color: #ffdd00; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: -70px; --ny: -100px; color: #00e5ff; right: 50%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -120px; color: #ff00ff; top: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -164,10 +165,10 @@
                     <div class="energy-circle">
                         <div class="energy-fill"></div>
                         <div class="energy-center">70%</div>
-                        <div class="sparkle-particle" style="--nx: 60px; --ny: -60px; color: #ff4500; top: 50%; left: 50%;"></div>
-                        <div class="sparkle-particle" style="--nx: -60px; --ny: 60px; color: #00ff00; top: 50%; left: 50%;"></div>
-                        <div class="sparkle-particle" style="--nx: 70px; --ny: 20px; color: #00ffff; top: 50%; left: 50%;"></div>
-                        <div class="sparkle-particle" style="--nx: -40px; --ny: -70px; color: #ff00ff; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: 75px; --ny: -75px; color: #ff4d00; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: -75px; --ny: 75px; color: #33ff00; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: 90px; --ny: 30px; color: #00ffff; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: -50px; --ny: -90px; color: #ff00ff; top: 50%; left: 50%;"></div>
                     </div>
                 </div>
                 <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
@@ -225,4 +226,3 @@
     <script src="pair.js"></script>
 </body>
 </html>
-
