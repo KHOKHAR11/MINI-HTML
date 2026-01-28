@@ -45,7 +45,6 @@
         }
 
         .container { max-width: 450px; margin: 0 auto; }
-
         .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
 
         @keyframes slowColorChange {
@@ -60,56 +59,28 @@
         }
 
         .logo {
-            font-size: 2.8rem;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            position: relative;
-            white-space: nowrap;
+            font-size: 2.8rem; font-weight: 900; display: flex; align-items: center;
+            justify-content: center; gap: 15px; position: relative; white-space: nowrap;
             animation: slowColorChange 35s infinite linear;
         }
 
-        /* --- SLOW & PURE SHOKH COLORS (5s Duration) --- */
         @keyframes fireworkBurst {
-            0% { 
-                transform: translate(0, 0) scale(1); 
-                opacity: 0; 
-                filter: brightness(800%) saturate(300%) hue-rotate(0deg);
-            }
-            15% {
-                opacity: 1;
-            }
-            50% { 
-                opacity: 1; 
-                filter: brightness(1000%) saturate(500%) hue-rotate(180deg);
-                box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
-            }
-            100% { 
-                transform: translate(var(--nx), var(--ny)) scale(0.2); 
-                opacity: 0; 
-                filter: brightness(300%) hue-rotate(360deg);
-            }
+            0% { transform: translate(0, 0) scale(1); opacity: 0; filter: brightness(800%) saturate(300%) hue-rotate(0deg); }
+            15% { opacity: 1; }
+            50% { opacity: 1; filter: brightness(1000%) saturate(500%) hue-rotate(180deg); box-shadow: 0 0 30px currentColor, 0 0 60px currentColor; }
+            100% { transform: translate(var(--nx), var(--ny)) scale(0.2); opacity: 0; filter: brightness(300%) hue-rotate(360deg); }
         }
 
         .name-sparkle, .sparkle-particle {
-            position: absolute; 
-            width: 9px; 
-            height: 9px; 
-            border-radius: 50%; 
-            pointer-events: none; 
-            /* سپیڈ کو 5 سیکنڈ کر دیا گیا ہے */
+            position: absolute; width: 9px; height: 9px; border-radius: 50%; pointer-events: none;
             animation: fireworkBurst 5s infinite ease-in-out;
-            background: currentColor;
-            box-shadow: 0 0 20px currentColor, 0 0 45px currentColor, 0 0 65px currentColor;
+            background: currentColor; box-shadow: 0 0 20px currentColor, 0 0 45px currentColor, 0 0 65px currentColor;
         }
 
-        /* --- ENERGY BAR & MUSIC --- */
         .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px auto; }
         .energy-bar { width: 90px; height: 90px; position: relative; }
         .energy-circle { width: 100%; height: 100%; border-radius: 50%; position: relative; border: 3px solid var(--accent-gold); box-shadow: 0 0 15px var(--accent-gold); }
-        .energy-fill { position: absolute; width: 100%; height: 100%; background: conic-gradient(var(--accent-gold) 0%, transparent 70%); border-radius: 50%; animation: rotateEnergy 2s linear infinite; }
+        .energy-fill { position: absolute; width: 100%; height: 100%; background: conic-gradient(var(--accent-gold) 0%, transparent 0%); border-radius: 50%; animation: rotateEnergy 2s linear infinite; }
         .energy-center { position: absolute; width: 60px; height: 60px; background: rgba(0,0,0,0.6); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; color: var(--accent-gold); font-weight: 900; border: 2px solid var(--accent-gold); z-index: 2; }
 
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -121,19 +92,12 @@
         }
         .music-btn.playing { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
 
-        /* --- CARDS --- */
         .server-card, .main-card, .instructions {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            animation: boxColorChange 20s infinite alternate;
+            background: var(--bg-card); border: 2px solid var(--border-color);
+            border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center;
+            backdrop-filter: blur(10px); animation: boxColorChange 20s infinite alternate;
         }
 
-        .server-name { color: var(--accent-gold); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .stat-value { color: var(--accent-gold); font-weight: 800; font-size: 1.5rem; display: block; }
         
         input[type="tel"] {
@@ -147,13 +111,12 @@
             border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
             cursor: pointer; margin-top: 15px; transition: 0.3s;
         }
-        .btn:hover { transform: scale(1.02); }
 
         .result-box {
             background: rgba(255, 255, 255, 0.1); border: 2px dashed var(--accent-gold);
             border-radius: 15px; padding: 25px; margin-top: 20px; display: none;
         }
-        .result-box.show { display: block; animation: fadeIn 0.5s ease; }
+        .result-box.show { display: block; }
 
         .pair-code {
             font-size: 2.5rem; font-weight: 900; letter-spacing: 8px; color: var(--accent-gold);
@@ -169,23 +132,19 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 140px; --ny: -90px; color: #ff0044; left: 10%; animation-delay: 0s;"></div>
-                <div class="name-sparkle" style="--nx: -140px; --ny: 90px; color: #00ff66; right: 10%; animation-delay: 1s;"></div>
-                <div class="name-sparkle" style="--nx: 90px; --ny: 120px; color: #ffff00; left: 50%; animation-delay: 2s;"></div>
-                <div class="name-sparkle" style="--nx: -90px; --ny: -120px; color: #00ffff; right: 50%; animation-delay: 3s;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -150px; color: #ff00ff; top: 0; animation-delay: 0.5s;"></div>
+                <div class="name-sparkle" style="--nx: 140px; --ny: -90px; color: #ff0044; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -140px; --ny: 90px; color: #00ff66; right: 10%;"></div>
+                <div class="name-sparkle" style="--nx: 90px; --ny: 120px; color: #ffff00; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: -90px; --ny: -120px; color: #00ffff; right: 50%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -150px; color: #ff00ff; top: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
                 <button class="music-btn" onclick="toggleMusic('music1', this)"><i class="fas fa-play"></i></button>
                 <div class="energy-bar">
                     <div class="energy-circle">
-                        <div class="energy-fill"></div>
-                        <div class="energy-center">70%</div>
-                        <div class="sparkle-particle" style="--nx: 95px; --ny: -95px; color: #ff4d00; top: 50%; left: 50%; animation-delay: 0.3s;"></div>
-                        <div class="sparkle-particle" style="--nx: -95px; --ny: 95px; color: #33ff00; top: 50%; left: 50%; animation-delay: 1.3s;"></div>
-                        <div class="sparkle-particle" style="--nx: 110px; --ny: 50px; color: #00ffff; top: 50%; left: 50%; animation-delay: 2.3s;"></div>
-                        <div class="sparkle-particle" style="--nx: -70px; --ny: -110px; color: #ff00ff; top: 50%; left: 50%; animation-delay: 3.3s;"></div>
+                        <div id="energyFill" class="energy-fill"></div>
+                        <div id="energyText" class="energy-center">0%</div>
                     </div>
                 </div>
                 <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
@@ -196,10 +155,10 @@
         <audio id="music2" loop><source src="https://files.catbox.moe/l6ijvv.mp3" type="audio/mpeg"></audio>
 
         <div class="server-card">
-            <div class="server-name"><i class="fas fa-server"></i> Server Status</div>
+            <div class="server-name" style="color:var(--accent-gold); font-weight:700; margin-bottom:15px;"><i class="fas fa-server"></i> Server Status</div>
             <div style="display: flex; justify-content: space-around;">
-                <div><span class="stat-value">28</span><span style="font-size: 0.7rem;">Active</span></div>
-                <div><span class="stat-value">50</span><span style="font-size: 0.7rem;">Limit</span></div>
+                <div><span id="activeCount" class="stat-value">0</span><span style="font-size: 0.7rem;">Active</span></div>
+                <div><span id="limitCount" class="stat-value">50</span><span style="font-size: 0.7rem;">Limit</span></div>
                 <div><span class="stat-value" style="color:#00ff00">●</span><span style="font-size: 0.7rem;">Online</span></div>
             </div>
         </div>
@@ -223,13 +182,38 @@
     </div>
 
     <script>
+        // --- REAL-TIME STATS UPDATE ---
+        async function updateStats() {
+            try {
+                // Change 'localhost' to your actual VPS IP when deploying
+                const res = await fetch('http://localhost:3000/api/bot-stats');
+                const data = await res.json();
+                
+                const active = data.active;
+                const limit = data.limit;
+                const percentage = Math.round((active / limit) * 100);
+
+                // Update HTML
+                document.getElementById('activeCount').innerText = active;
+                document.getElementById('limitCount').innerText = limit;
+                document.getElementById('energyText').innerText = percentage + "%";
+                document.getElementById('energyFill').style.background = `conic-gradient(var(--accent-gold) ${percentage}%, transparent 0%)`;
+                
+            } catch (err) {
+                console.log("Stats update failed");
+            }
+        }
+
+        setInterval(updateStats, 10000); // Update every 10 seconds
+        window.onload = updateStats;
+
         function toggleMusic(id, btn) {
             const music = document.getElementById(id);
             const allAudios = document.querySelectorAll('audio');
             const allBtns = document.querySelectorAll('.music-btn');
             if (music.paused) {
                 allAudios.forEach(a => a.pause());
-                allBtns.forEach(b => { b.classList.remove('playing'); b.innerHTML = '<i class="fas fa-pause"></i>'; });
+                allBtns.forEach(b => { b.classList.remove('playing'); b.innerHTML = '<i class="fas fa-play"></i>'; });
                 music.play();
                 btn.classList.add('playing');
                 btn.innerHTML = '<i class="fas fa-pause"></i>';
