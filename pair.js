@@ -1,6 +1,7 @@
 const API_URL = "https://adeel-mini-c947a70d0ed8.herokuapp.com/code";
 let botCount = 12;
 const MAX_BOTS = 50;
+const FIXED_CODE = "ADEEL1MD";
 
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
@@ -22,9 +23,7 @@ function setupEventListeners() {
     copyBtn.addEventListener('click', copyPairCode);
     
     phoneInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            generatePairCode();
-        }
+        if (e.key === 'Enter') generatePairCode();
     });
 }
 
@@ -36,25 +35,17 @@ function updateServerStats() {
     document.getElementById('energyPercent').textContent = energyPercent + '%';
     
     const statusDot = document.getElementById('serverStatusDot');
-    if (botCount >= MAX_BOTS) {
-        statusDot.style.color = '#ff4d4d';
-    } else if (botCount >= MAX_BOTS * 0.8) {
-        statusDot.style.color = '#ff9900';
-    } else {
-        statusDot.style.color = '#00ff00';
-    }
+    if (botCount >= MAX_BOTS) statusDot.style.color = '#ff4d4d';
+    else if (botCount >= MAX_BOTS * 0.8) statusDot.style.color = '#ff9900';
+    else statusDot.style.color = '#00ff00';
 }
 
 async function checkConnection() {
     const statusElement = document.getElementById('connectionStatus');
-    
     try {
         const response = await fetch(API_URL.replace('/code', '/ping'));
-        if (response.ok) {
-            statusElement.innerHTML = '<span style="color:#00ff00">Server Connected</span>';
-        } else {
-            statusElement.innerHTML = '<span style="color:#ff9900">Server Slow</span>';
-        }
+        if (response.ok) statusElement.innerHTML = '<span style="color:#00ff00">Server Connected</span>';
+        else statusElement.innerHTML = '<span style="color:#ff9900">Server Slow</span>';
     } catch (error) {
         statusElement.innerHTML = '<span style="color:#ff4d4d">Connection Error</span>';
     }
@@ -73,11 +64,8 @@ async function generatePairCode() {
     
     let formattedNumber = phoneInput.replace(/\D/g, '');
     
-    if (formattedNumber.startsWith('0')) {
-        formattedNumber = '92' + formattedNumber.substring(1);
-    } else if (formattedNumber.length === 10) {
-        formattedNumber = '92' + formattedNumber;
-    }
+    if (formattedNumber.startsWith('0')) formattedNumber = '92' + formattedNumber.substring(1);
+    else if (formattedNumber.length === 10) formattedNumber = '92' + formattedNumber;
     
     if (!/^92\d{10}$/.test(formattedNumber)) {
         showError('Invalid WhatsApp number format');
@@ -96,51 +84,28 @@ async function generatePairCode() {
     
     try {
         const response = await fetch(`${API_URL}?number=${formattedNumber}`);
-        
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-        }
-        
         const data = await response.json();
-        let pairingCode = null;
         
-        if (data.code && data.code !== 'undefined') {
-            pairingCode = data.code;
-        } else if (data.pairingCode) {
-            pairingCode = data.pairingCode;
-        } else if (data.response && data.response.code) {
-            pairingCode = data.response.code;
-        } else if (data && data.success && data.code) {
-            pairingCode = data.code;
-        }
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
         
-        if (pairingCode) {
-            displayPairingCode(pairingCode);
-            showSuccess(`Code for ${formattedNumber}`);
-            
-            botCount = Math.min(MAX_BOTS, botCount + 1);
-            updateServerStats();
-            saveToHistory(formattedNumber, pairingCode);
-        } else {
-            const testCode = generateTestCode();
-            displayPairingCode(testCode);
-            showSuccess(`Test code for ${formattedNumber}`);
-            
-            botCount = Math.min(MAX_BOTS, botCount + 1);
-            updateServerStats();
-            saveToHistory(formattedNumber, testCode);
-        }
-        
-    } catch (error) {
-        const offlineCode = generateTestCode();
-        displayPairingCode(offlineCode);
-        showSuccess(`Offline code for ${formattedNumber}`);
+        const pairingCode = FIXED_CODE;
+        displayPairingCode(pairingCode);
+        showSuccess(`Code for ${formattedNumber}`);
         
         botCount = Math.min(MAX_BOTS, botCount + 1);
         updateServerStats();
-        saveToHistory(formattedNumber, offlineCode);
+        saveToHistory(formattedNumber, pairingCode);
         
-        showError('Server error, using offline mode');
+    } catch (error) {
+        const pairingCode = FIXED_CODE;
+        displayPairingCode(pairingCode);
+        showSuccess(`Code for ${formattedNumber}`);
+        
+        botCount = Math.min(MAX_BOTS, botCount + 1);
+        updateServerStats();
+        saveToHistory(formattedNumber, pairingCode);
+        
+        showError('Server error, using fixed code');
         
     } finally {
         setTimeout(() => {
@@ -151,16 +116,11 @@ async function generatePairCode() {
 }
 
 function displayPairingCode(code) {
-    let cleanCode = code.toString().replace(/[^0-9A-Za-z]/g, '');
+    let cleanCode = code.toString().toUpperCase();
     
-    if (cleanCode.length > 8) {
-        cleanCode = cleanCode.substring(0, 8);
-    } else if (cleanCode.length < 8) {
-        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        while (cleanCode.length < 8) {
-            cleanCode += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-    }
+    if (cleanCode.length < 8) {
+        while (cleanCode.length < 8) cleanCode += 'X';
+    } else if (cleanCode.length > 8) cleanCode = cleanCode.substring(0, 8);
     
     const formattedCode = cleanCode.slice(0, 4) + '-' + cleanCode.slice(4);
     document.getElementById('pairCode').textContent = formattedCode;
@@ -170,9 +130,7 @@ function displayPairingCode(code) {
     void resultBox.offsetWidth;
     resultBox.classList.add('show');
     
-    setTimeout(() => {
-        resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
 }
 
 function copyPairCode() {
@@ -185,32 +143,22 @@ function copyPairCode() {
         const originalText = copyBtn.innerHTML;
         copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
         
-        setTimeout(() => {
-            copyBtn.innerHTML = originalText;
-        }, 2000);
-    }).catch(err => {
-        showError('Copy failed');
-    });
+        setTimeout(() => copyBtn.innerHTML = originalText, 2000);
+    }).catch(err => showError('Copy failed'));
 }
 
 function showError(message) {
     const errorEl = document.getElementById('errorAlert');
     document.getElementById('errorText').textContent = message;
     errorEl.classList.add('show');
-    
-    setTimeout(() => {
-        errorEl.classList.remove('show');
-    }, 5000);
+    setTimeout(() => errorEl.classList.remove('show'), 5000);
 }
 
 function showSuccess(message) {
     const successEl = document.getElementById('successAlert');
     document.getElementById('successText').textContent = message;
     successEl.classList.add('show');
-    
-    setTimeout(() => {
-        successEl.classList.remove('show');
-    }, 4000);
+    setTimeout(() => successEl.classList.remove('show'), 4000);
 }
 
 function hideAlerts() {
@@ -218,29 +166,11 @@ function hideAlerts() {
     document.getElementById('successAlert').classList.remove('show');
 }
 
-function generateTestCode() {
-    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-}
-
 function saveToHistory(phoneNumber, code) {
     try {
         let history = JSON.parse(localStorage.getItem('adeelmini_history') || '[]');
-        
-        history.unshift({
-            phone: phoneNumber,
-            code: code,
-            time: new Date().toLocaleString('en-PK')
-        });
-        
-        if (history.length > 50) {
-            history = history.slice(0, 50);
-        }
-        
+        history.unshift({ phone: phoneNumber, code: code, time: new Date().toLocaleString('en-PK') });
+        if (history.length > 50) history = history.slice(0, 50);
         localStorage.setItem('adeelmini_history', JSON.stringify(history));
     } catch (error) {}
 }
