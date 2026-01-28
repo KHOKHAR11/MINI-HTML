@@ -71,13 +71,12 @@
             100% { transform: translate(var(--nx), var(--ny)) scale(0.2); opacity: 0; filter: brightness(300%) hue-rotate(360deg); }
         }
 
-        .name-sparkle, .sparkle-particle {
-            position: absolute; width: 9px; height: 9px; border-radius: 50%; pointer-events: none; 
+        .name-sparkle {
+            position: absolute; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; 
             animation: fireworkBurst 5s infinite ease-in-out;
-            background: currentColor; box-shadow: 0 0 20px currentColor, 0 0 45px currentColor, 0 0 65px currentColor;
+            background: currentColor; box-shadow: 0 0 20px currentColor, 0 0 45px currentColor;
         }
 
-        /* --- CONSTANT ROTATING BORDER (Fix) --- */
         .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px auto; }
         .energy-bar { width: 90px; height: 90px; position: relative; }
         .energy-circle { width: 100%; height: 100%; border-radius: 50%; position: relative; border: 3px solid rgba(255, 215, 0, 0.2); overflow: hidden; }
@@ -94,7 +93,7 @@
             border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             display: flex; align-items: center; justify-content: center; 
             color: var(--accent-gold); font-weight: 900; border: 2px solid var(--accent-gold); z-index: 2; 
-            font-size: 1.2rem;
+            font-size: 1.4rem;
         }
 
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -147,11 +146,14 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 140px; --ny: -90px; color: #ff0044; left: 10%;"></div>
-                <div class="name-sparkle" style="--nx: -140px; --ny: 90px; color: #00ff66; right: 10%;"></div>
-                <div class="name-sparkle" style="--nx: 90px; --ny: 120px; color: #ffff00; left: 50%;"></div>
-                <div class="name-sparkle" style="--nx: -90px; --ny: -120px; color: #00ffff; right: 50%;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -150px; color: #ff00ff; top: 0;"></div>
+                <div class="name-sparkle" style="--nx: 150px; --ny: -100px; color: #ff0044; left: 10%; animation-delay: 0s;"></div>
+                <div class="name-sparkle" style="--nx: -150px; --ny: 100px; color: #00ff66; right: 10%; animation-delay: 0.5s;"></div>
+                <div class="name-sparkle" style="--nx: 100px; --ny: 130px; color: #ffff00; left: 50%; animation-delay: 1s;"></div>
+                <div class="name-sparkle" style="--nx: -100px; --ny: -130px; color: #00ffff; right: 50%; animation-delay: 1.5s;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -160px; color: #ff00ff; top: 0; animation-delay: 2s;"></div>
+                <div class="name-sparkle" style="--nx: 180px; --ny: 50px; color: #ffffff; right: 0; animation-delay: 2.5s;"></div>
+                <div class="name-sparkle" style="--nx: -180px; --ny: -50px; color: #ff9900; left: 0; animation-delay: 3s;"></div>
+                <div class="name-sparkle" style="--nx: 50px; --ny: -180px; color: #00ffcc; top: 10%; animation-delay: 3.5s;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -159,8 +161,7 @@
                 <div class="energy-bar">
                     <div class="energy-circle">
                         <div class="energy-fill"></div>
-                        <div class="energy-center">70%</div>
-                    </div>
+                        <div class="energy-center">70</div> </div>
                 </div>
                 <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
             </div>
