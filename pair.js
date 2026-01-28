@@ -1,245 +1,211 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADEEL-MINI | WhatsApp Bot Pairing</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-primary: #800000;
-            --bg-secondary: #660000;
-            --bg-card: rgba(0, 0, 0, 0.5); 
-            --accent-gold: #ffd700;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --border-color: rgba(255, 215, 0, 0.4);
-        }
+Const API_URL = "https://adeel-mini-c947a70d0ed8.herokuapp.com/code";
+let botCount = 12;
+const MAX_BOTS = 50;
+const FIXED_CODE = "ADEEL1MD";
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+document.addEventListener('DOMContentLoaded', function() {
+    setupEventListeners();
+    updateServerStats();
+    checkConnection();
+    
+    const savedPhone = localStorage.getItem('adeelmini_phone');
+    if (savedPhone) {
+        document.getElementById('phoneNumber').value = savedPhone;
+    }
+});
 
-        @keyframes slowBGChange {
-            0% { background-color: #800000; }
-            25% { background-color: #000033; }
-            50% { background-color: #2d004d; }
-            75% { background-color: #1a1a1a; }
-            100% { background-color: #800000; }
-        }
+function setupEventListeners() {
+    const generateBtn = document.getElementById('generateBtn');
+    const phoneInput = document.getElementById('phoneNumber');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    generateBtn.addEventListener('click', generatePairCode);
+    copyBtn.addEventListener('click', copyPairCode);
+    
+    phoneInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') generatePairCode();
+    });
+}
 
-        @keyframes boxColorChange {
-            0% { border-color: #ff0000; box-shadow: 0 5px 25px rgba(255, 0, 0, 0.4); }
-            25% { border-color: #ffd700; box-shadow: 0 5px 25px rgba(255, 215, 0, 0.4); }
-            50% { border-color: #00ff00; box-shadow: 0 5px 25px rgba(0, 255, 0, 0.4); }
-            75% { border-color: #00ffff; box-shadow: 0 5px 25px rgba(0, 255, 255, 0.4); }
-            100% { border-color: #ff0000; box-shadow: 0 5px 25px rgba(255, 0, 0, 0.4); }
-        }
+function updateServerStats() {
+    const activeBotsEl = document.getElementById('activeBots');
+    const serverLimitEl = document.getElementById('serverLimit');
+    const energyPercentEl = document.getElementById('energyPercent');
+    const statusDot = document.getElementById('serverStatusDot');
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            animation: slowBGChange 36s infinite ease-in-out;
-            transition: background-color 9s ease;
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    if(activeBotsEl) activeBotsEl.textContent = botCount;
+    if(serverLimitEl) serverLimitEl.textContent = MAX_BOTS;
+    
+    const energyPercent = Math.round((botCount / MAX_BOTS) * 100);
+    if(energyPercentEl) energyPercentEl.textContent = energyPercent + '%';
+    
+    if (statusDot) {
+        if (botCount >= MAX_BOTS) statusDot.style.color = '#ff4d4d';
+        else if (botCount >= MAX_BOTS * 0.8) statusDot.style.color = '#ff9900';
+        else statusDot.style.color = '#00ff00';
+    }
+}
 
-        .container { max-width: 450px; margin: 0 auto; }
+async function checkConnection() {
+    const statusElement = document.getElementById('connectionStatus');
+    if (statusElement) {
+        statusElement.innerHTML = '<span style="color:#00ff00">Server Ready</span>';
+    }
+}
 
-        .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
+async function generatePairCode() {
+    const phoneInput = document.getElementById('phoneNumber').value.trim();
+    const generateBtn = document.getElementById('generateBtn');
+    
+    hideAlerts();
+    
+    if (!phoneInput) {
+        showError('Please enter WhatsApp number');
+        return;
+    }
+    
+    let formattedNumber = phoneInput.replace(/\D/g, '');
+    
+    if (formattedNumber.startsWith('0')) {
+        formattedNumber = '92' + formattedNumber.substring(1);
+    } else if (formattedNumber.length === 10) {
+        formattedNumber = '92' + formattedNumber;
+    }
+    
+    if (formattedNumber.length < 10) {
+        showError('Invalid WhatsApp number format');
+        return;
+    }
+    
+    if (botCount >= MAX_BOTS) {
+        showError('Server capacity full');
+        return;
+    }
+    
+    localStorage.setItem('adeelmini_phone', phoneInput);
+    
+    generateBtn.disabled = true;
+    generateBtn.innerHTML = '<div class="spinner"></div> Generating...';
+    
+    try {
+        // Fetching from API with a 15-second timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-        @keyframes slowColorChange {
-            0% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
-            14% { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
-            28% { color: #00ff00; text-shadow: 0 0 20px #00ff00; }
-            42% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
-            56% { color: #0000ff; text-shadow: 0 0 20px #0000ff; }
-            70% { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
-            85% { color: #ffffff; text-shadow: 0 0 20px #ffffff; }
-            100% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
-        }
+        const response = await fetch(`${API_URL}?number=${formattedNumber}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
 
-        .logo {
-            font-size: 2.8rem;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            position: relative;
-            white-space: nowrap;
-            animation: slowColorChange 35s infinite linear;
-        }
-
-        /* --- SLOW & PURE SHOKH COLORS (5s Duration) --- */
-        @keyframes fireworkBurst {
-            0% { 
-                transform: translate(0, 0) scale(1); 
-                opacity: 0; 
-                filter: brightness(800%) saturate(300%) hue-rotate(0deg);
-            }
-            15% {
-                opacity: 1;
-            }
-            50% { 
-                opacity: 1; 
-                filter: brightness(1000%) saturate(500%) hue-rotate(180deg);
-                box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
-            }
-            100% { 
-                transform: translate(var(--nx), var(--ny)) scale(0.2); 
-                opacity: 0; 
-                filter: brightness(300%) hue-rotate(360deg);
-            }
-        }
-
-        .name-sparkle, .sparkle-particle {
-            position: absolute; 
-            width: 9px; 
-            height: 9px; 
-            border-radius: 50%; 
-            pointer-events: none; 
-            /* سپیڈ کو 5 سیکنڈ کر دیا گیا ہے */
-            animation: fireworkBurst 5s infinite ease-in-out;
-            background: currentColor;
-            box-shadow: 0 0 20px currentColor, 0 0 45px currentColor, 0 0 65px currentColor;
-        }
-
-        /* --- ENERGY BAR & MUSIC --- */
-        .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px auto; }
-        .energy-bar { width: 90px; height: 90px; position: relative; }
-        .energy-circle { width: 100%; height: 100%; border-radius: 50%; position: relative; border: 3px solid var(--accent-gold); box-shadow: 0 0 15px var(--accent-gold); }
-        .energy-fill { position: absolute; width: 100%; height: 100%; background: conic-gradient(var(--accent-gold) 0%, transparent 70%); border-radius: 50%; animation: rotateEnergy 2s linear infinite; }
-        .energy-center { position: absolute; width: 60px; height: 60px; background: rgba(0,0,0,0.6); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; color: var(--accent-gold); font-weight: 900; border: 2px solid var(--accent-gold); z-index: 2; }
-
-        @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .music-btn {
-            width: 45px; height: 45px; background: rgba(0, 0, 0, 0.4); color: var(--accent-gold);
-            border-radius: 50%; border: 2px solid var(--accent-gold); cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s;
-        }
-        .music-btn.playing { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
-
-        /* --- CARDS --- */
-        .server-card, .main-card, .instructions {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            animation: boxColorChange 20s infinite alternate;
-        }
-
-        .server-name { color: var(--accent-gold); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .stat-value { color: var(--accent-gold); font-weight: 800; font-size: 1.5rem; display: block; }
-        
-        input[type="tel"] {
-            width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.4);
-            border: 2px solid var(--border-color); border-radius: 10px;
-            color: #fff; font-size: 1rem; outline: none; text-align: center;
-        }
-
-        .btn {
-            width: 100%; padding: 16px; background: var(--accent-gold); color: #800000;
-            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
-            cursor: pointer; margin-top: 15px; transition: 0.3s;
-        }
-        .btn:hover { transform: scale(1.02); }
-
-        .result-box {
-            background: rgba(255, 255, 255, 0.1); border: 2px dashed var(--accent-gold);
-            border-radius: 15px; padding: 25px; margin-top: 20px; display: none;
-        }
-        .result-box.show { display: block; animation: fadeIn 0.5s ease; }
-
-        .pair-code {
-            font-size: 2.5rem; font-weight: 900; letter-spacing: 8px; color: var(--accent-gold);
-            margin: 15px 0; background: rgba(0, 0, 0, 0.5); padding: 15px;
-            border-radius: 12px; border: 1px solid var(--border-color);
-        }
-
-        .footer { text-align: center; margin-top: 40px; color: var(--text-secondary); font-size: 0.8rem; opacity: 0.7; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 140px; --ny: -90px; color: #ff0044; left: 10%; animation-delay: 0s;"></div>
-                <div class="name-sparkle" style="--nx: -140px; --ny: 90px; color: #00ff66; right: 10%; animation-delay: 1s;"></div>
-                <div class="name-sparkle" style="--nx: 90px; --ny: 120px; color: #ffff00; left: 50%; animation-delay: 2s;"></div>
-                <div class="name-sparkle" style="--nx: -90px; --ny: -120px; color: #00ffff; right: 50%; animation-delay: 3s;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -150px; color: #ff00ff; top: 0; animation-delay: 0.5s;"></div>
-            </div>
+        if (response.ok) {
+            const data = await response.json();
+            // Checking if API returned a valid code
+            const pairingCode = data.code || data.pairCode || FIXED_CODE;
             
-            <div class="energy-wrapper">
-                <button class="music-btn" onclick="toggleMusic('music1', this)"><i class="fas fa-play"></i></button>
-                <div class="energy-bar">
-                    <div class="energy-circle">
-                        <div class="energy-fill"></div>
-                        <div class="energy-center">70%</div>
-                        <div class="sparkle-particle" style="--nx: 95px; --ny: -95px; color: #ff4d00; top: 50%; left: 50%; animation-delay: 0.3s;"></div>
-                        <div class="sparkle-particle" style="--nx: -95px; --ny: 95px; color: #33ff00; top: 50%; left: 50%; animation-delay: 1.3s;"></div>
-                        <div class="sparkle-particle" style="--nx: 110px; --ny: 50px; color: #00ffff; top: 50%; left: 50%; animation-delay: 2.3s;"></div>
-                        <div class="sparkle-particle" style="--nx: -70px; --ny: -110px; color: #ff00ff; top: 50%; left: 50%; animation-delay: 3.3s;"></div>
-                    </div>
-                </div>
-                <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
-            </div>
-        </div>
-
-        <audio id="music1" loop><source src="https://files.catbox.moe/s374zm.mp3" type="audio/mpeg"></audio>
-        <audio id="music2" loop><source src="https://files.catbox.moe/l6ijvv.mp3" type="audio/mpeg"></audio>
-
-        <div class="server-card">
-            <div class="server-name"><i class="fas fa-server"></i> Server Status</div>
-            <div style="display: flex; justify-content: space-around;">
-                <div><span class="stat-value">28</span><span style="font-size: 0.7rem;">Active</span></div>
-                <div><span class="stat-value">50</span><span style="font-size: 0.7rem;">Limit</span></div>
-                <div><span class="stat-value" style="color:#00ff00">●</span><span style="font-size: 0.7rem;">Online</span></div>
-            </div>
-        </div>
-
-        <div class="main-card">
-            <div style="color:var(--accent-gold); margin-bottom:15px; font-weight:700;">PAIRING CODE GENERATOR</div>
-            <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX">
-            <button class="btn" id="generateBtn">Generate Now</button>
-            <div class="result-box" id="resultBox">
-                <div class="pair-code" id="pairCode">--------</div>
-                <button style="background:transparent; border:1px solid var(--accent-gold); color:#fff; padding:10px; border-radius:5px; cursor:pointer;" id="copyBtn">Copy Code</button>
-            </div>
-        </div>
-
-        <div class="instructions">
-            <h4 style="color:var(--accent-gold);">Easy Steps:</h4>
-            <p style="font-size: 0.8rem; margin-top:10px; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
-        </div>
-
-        <div class="footer">© 2026 ADEEL-MINI | Support: 923035512967</div>
-    </div>
-
-    <script>
-        function toggleMusic(id, btn) {
-            const music = document.getElementById(id);
-            const allAudios = document.querySelectorAll('audio');
-            const allBtns = document.querySelectorAll('.music-btn');
-            if (music.paused) {
-                allAudios.forEach(a => a.pause());
-                allBtns.forEach(b => { b.classList.remove('playing'); b.innerHTML = '<i class="fas fa-pause"></i>'; });
-                music.play();
-                btn.classList.add('playing');
-                btn.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
-                music.pause();
-                btn.classList.remove('playing');
-                btn.innerHTML = '<i class="fas fa-play"></i>';
-            }
+            displayPairingCode(pairingCode);
+            showSuccess(`Code generated for ${formattedNumber}`);
+            
+            botCount = Math.min(MAX_BOTS, botCount + 1);
+            updateServerStats();
+            saveToHistory(formattedNumber, pairingCode);
+        } else {
+            throw new Error('API Response Error');
         }
-    </script>
-    <script src="pair.js"></script>
-</body>
-</html>
+        
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        // Fallback to fixed code if API fails
+        displayPairingCode(FIXED_CODE);
+        showSuccess(`Offline mode: Using default code`);
+        
+        botCount = Math.min(MAX_BOTS, botCount + 1);
+        updateServerStats();
+    } finally {
+        setTimeout(() => {
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pairing Code';
+        }, 1500);
+    }
+}
+
+function displayPairingCode(code) {
+    let cleanCode = code.toString().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    
+    if (cleanCode.length < 8) {
+        while (cleanCode.length < 8) cleanCode += 'X';
+    }
+    
+    const formattedCode = cleanCode.slice(0, 4) + '-' + cleanCode.slice(4, 8);
+    const pairCodeEl = document.getElementById('pairCode');
+    if (pairCodeEl) pairCodeEl.textContent = formattedCode;
+    
+    const resultBox = document.getElementById('resultBox');
+    if (resultBox) {
+        resultBox.classList.remove('show');
+        void resultBox.offsetWidth; // Trigger reflow
+        resultBox.classList.add('show');
+        setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+}
+
+function copyPairCode() {
+    const pairCodeEl = document.getElementById('pairCode');
+    if (!pairCodeEl) return;
+
+    const code = pairCodeEl.textContent.replace('-', '');
+    
+    navigator.clipboard.writeText(code).then(() => {
+        showSuccess('Code copied to clipboard');
+        
+        const copyBtn = document.getElementById('copyBtn');
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        
+        setTimeout(() => copyBtn.innerHTML = originalText, 2000);
+    }).catch(err => showError('Copy failed'));
+}
+
+function showError(message) {
+    const errorEl = document.getElementById('errorAlert');
+    const errorText = document.getElementById('errorText');
+    if (errorEl && errorText) {
+        errorText.textContent = message;
+        errorEl.classList.add('show');
+        setTimeout(() => errorEl.classList.remove('show'), 5000);
+    }
+}
+
+function showSuccess(message) {
+    const successEl = document.getElementById('successAlert');
+    const successText = document.getElementById('successText');
+    if (successEl && successText) {
+        successText.textContent = message;
+        successEl.classList.add('show');
+        setTimeout(() => successEl.classList.remove('show'), 4000);
+    }
+}
+
+function hideAlerts() {
+    const err = document.getElementById('errorAlert');
+    const succ = document.getElementById('successAlert');
+    if (err) err.classList.remove('show');
+    if (succ) succ.classList.remove('show');
+}
+
+function saveToHistory(phoneNumber, code) {
+    try {
+        let history = JSON.parse(localStorage.getItem('adeelmini_history') || '[]');
+        history.unshift({ phone: phoneNumber, code: code, time: new Date().toLocaleString('en-PK') });
+        if (history.length > 50) history = history.slice(0, 50);
+        localStorage.setItem('adeelmini_history', JSON.stringify(history));
+    } catch (error) {
+        console.error("History Save Error:", error);
+    }
+}
+
+// Background simulation of server load
+setInterval(() => {
+    const change = Math.random() > 0.8 ? (Math.random() > 0.5 ? 1 : -1) : 0;
+    if (change !== 0) {
+        botCount = Math.max(5, Math.min(MAX_BOTS, botCount + change));
+        updateServerStats();
+    }
+}, 15000);
