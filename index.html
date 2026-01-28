@@ -10,7 +10,7 @@
         :root {
             --bg-primary: #800000;
             --bg-secondary: #660000;
-            --bg-card: rgba(0, 0, 0, 0.5);
+            --bg-card: rgba(0, 0, 0, 0.5); 
             --accent-gold: #ffd700;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.8);
@@ -19,7 +19,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* --- BACKGROUND ANIMATION --- */
         @keyframes slowBGChange {
             0% { background-color: #800000; }
             25% { background-color: #000033; }
@@ -43,51 +42,52 @@
             color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
         }
 
         .container { max-width: 450px; margin: 0 auto; }
 
-        /* --- HEADER & LOGO --- */
         .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
 
         @keyframes slowColorChange {
             0% { color: #ff0000; text-shadow: 0 0 15px #ff0000; }
-            25% { color: #ffd700; text-shadow: 0 0 15px #ffd700; }
-            50% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
-            75% { color: #00ffff; text-shadow: 0 0 15px #00ffff; }
+            14% { color: #ffd700; text-shadow: 0 0 15px #ffd700; }
+            28% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
+            42% { color: #00ffff; text-shadow: 0 0 15px #00ffff; }
+            56% { color: #0000ff; text-shadow: 0 0 15px #0000ff; }
+            70% { color: #ff00ff; text-shadow: 0 0 15px #ff00ff; }
+            85% { color: #ffffff; text-shadow: 0 0 15px #ffffff; }
             100% { color: #ff0000; text-shadow: 0 0 15px #ff0000; }
         }
 
         .logo {
             font-size: 2.8rem;
             font-weight: 900;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
             position: relative;
-            animation: slowColorChange 10s infinite linear;
+            white-space: nowrap;
+            animation: slowColorChange 35s infinite linear;
         }
 
-        /* --- NEW FIREWORKS SPARKLES (NAME & CIRCLE) --- */
+        /* --- UPDATED SHOKH SPARKLES (Fireworks Style) --- */
         @keyframes fireworkBurst {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; filter: hue-rotate(0deg); }
-            100% { transform: translate(var(--twx), var(--twy)) scale(0); opacity: 0; filter: hue-rotate(360deg); }
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--nx), var(--ny)) scale(0); opacity: 0; }
         }
 
-        .sparkle-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #fff;
+        .name-sparkle, .sparkle-particle {
+            position: absolute; 
+            width: 6px; 
+            height: 6px; 
+            border-radius: 50%; 
+            pointer-events: none; 
+            animation: fireworkBurst 1.8s infinite ease-out;
             box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-            pointer-events: none;
-            animation: fireworkBurst var(--dur) infinite ease-out;
         }
 
-        /* --- ENERGY BAR --- */
+        /* --- ENERGY BAR & MUSIC --- */
         .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px auto; }
         .energy-bar { width: 90px; height: 90px; position: relative; }
         .energy-circle { width: 100%; height: 100%; border-radius: 50%; position: relative; border: 3px solid var(--accent-gold); box-shadow: 0 0 15px var(--accent-gold); }
@@ -129,12 +129,13 @@
             border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
             cursor: pointer; margin-top: 15px; transition: 0.3s;
         }
+        .btn:hover { transform: scale(1.02); }
 
         .result-box {
             background: rgba(255, 255, 255, 0.1); border: 2px dashed var(--accent-gold);
             border-radius: 15px; padding: 25px; margin-top: 20px; display: none;
         }
-        .result-box.show { display: block; }
+        .result-box.show { display: block; animation: fadeIn 0.5s ease; }
 
         .pair-code {
             font-size: 2.5rem; font-weight: 900; letter-spacing: 8px; color: var(--accent-gold);
@@ -150,11 +151,11 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="sparkle-particle" style="--twx: 100px; --twy: -80px; --dur: 1.5s; color: #ff0000; left: 20%;"></div>
-                <div class="sparkle-particle" style="--twx: -100px; --twy: -90px; --dur: 1.8s; color: #ffd700; right: 20%;"></div>
-                <div class="sparkle-particle" style="--twx: 50px; --twy: 100px; --dur: 2s; color: #00ff00; left: 50%;"></div>
-                <div class="sparkle-particle" style="--twx: -60px; --twy: 80px; --dur: 1.3s; color: #00ffff; bottom: 0;"></div>
-                <div class="sparkle-particle" style="--twx: 0px; --twy: -120px; --dur: 1.6s; color: #ff00ff; top: 0;"></div>
+                <div class="name-sparkle" style="--nx: 90px; --ny: -60px; color: #ff0000; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -90px; --ny: 60px; color: #00ff00; right: 10%;"></div>
+                <div class="name-sparkle" style="--nx: 50px; --ny: 80px; color: #ffd700; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: -50px; --ny: -80px; color: #00ffff; right: 50%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -90px; color: #ff00ff; top: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -163,10 +164,10 @@
                     <div class="energy-circle">
                         <div class="energy-fill"></div>
                         <div class="energy-center">70%</div>
-                        <div class="sparkle-particle" style="--twx: 70px; --twy: -70px; --dur: 1.2s; color: #ffd700; top: 50%; left: 50%;"></div>
-                        <div class="sparkle-particle" style="--twx: -70px; --twy: 70px; --dur: 1.5s; color: #ff4500; top: 50%; left: 50%;"></div>
-                        <div class="sparkle-particle" style="--twx: 80px; --twy: 30px; --dur: 1.7s; color: #00ff00; top: 50%; left: 50%;"></div>
-                        <div class="sparkle-particle" style="--twx: -50px; --twy: -80px; --dur: 1.4s; color: #ffffff; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: 60px; --ny: -60px; color: #ff4500; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: -60px; --ny: 60px; color: #00ff00; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: 70px; --ny: 20px; color: #00ffff; top: 50%; left: 50%;"></div>
+                        <div class="sparkle-particle" style="--nx: -40px; --ny: -70px; color: #ff00ff; top: 50%; left: 50%;"></div>
                     </div>
                 </div>
                 <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
@@ -224,3 +225,4 @@
     <script src="pair.js"></script>
 </body>
 </html>
+
