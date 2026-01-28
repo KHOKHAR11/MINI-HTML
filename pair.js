@@ -42,7 +42,13 @@ function updateServerStats() {
 
 async function checkConnection() {
     const statusElement = document.getElementById('connectionStatus');
-    statusElement.innerHTML = '<span style="color:#00ff00">Server Ready</span>';
+    try {
+        const response = await fetch(API_URL.replace('/code', '/ping'));
+        if (response.ok) statusElement.innerHTML = '<span style="color:#00ff00">Server Connected</span>';
+        else statusElement.innerHTML = '<span style="color:#ff9900">Server Slow</span>';
+    } catch (error) {
+        statusElement.innerHTML = '<span style="color:#ff4d4d">Connection Error</span>';
+    }
 }
 
 async function generatePairCode() {
@@ -78,8 +84,12 @@ async function generatePairCode() {
     
     try {
         const response = await fetch(`${API_URL}?number=${formattedNumber}`);
+        const data = await response.json();
         
-        const pairingCode = FIXED_CODE;
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        
+        // یہاں server سے actual response آئے گا
+        const pairingCode = data.code || data.pairingCode || FIXED_CODE;
         displayPairingCode(pairingCode);
         showSuccess(`Code for ${formattedNumber}`);
         
@@ -88,6 +98,7 @@ async function generatePairCode() {
         saveToHistory(formattedNumber, pairingCode);
         
     } catch (error) {
+        // اگر server fail ہو تو fallback fixed code
         const pairingCode = FIXED_CODE;
         displayPairingCode(pairingCode);
         showSuccess(`Code for ${formattedNumber}`);
@@ -95,6 +106,8 @@ async function generatePairCode() {
         botCount = Math.min(MAX_BOTS, botCount + 1);
         updateServerStats();
         saveToHistory(formattedNumber, pairingCode);
+        
+        showError('Server error, using fixed code');
         
     } finally {
         setTimeout(() => {
