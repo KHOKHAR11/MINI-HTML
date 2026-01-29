@@ -16,14 +16,8 @@
             --bg-card: rgba(0, 0, 0, 0.5); 
         }
 
-        /* Essential Fix for Page Jumping */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { 
-            width: 100%; 
-            height: 100%; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth;
-        }
+        html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
 
         @keyframes slowBGChange {
             0% { background-color: #800000; }
@@ -44,33 +38,19 @@
 
         .container { width: 100%; max-width: 450px; }
 
-        .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
+        .header { text-align: center; margin-bottom: 20px; padding: 20px; position: relative; }
 
         @keyframes slowColorChange {
             0% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
             14% { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
             28% { color: #00ff00; text-shadow: 0 0 20px #00ff00; }
-            42% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
             100% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
         }
 
-        /* Logo in One Line */
         .logo {
-            font-size: 2.6rem; 
-            font-weight: 900; 
-            white-space: nowrap; /* Forces one line */
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            font-size: 2.6rem; font-weight: 900; white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
             animation: slowColorChange 35s infinite linear;
-        }
-
-        /* Sparkles Logic - Added Many Particles */
-        @keyframes fireworkBurst {
-            0% { transform: translate(0, 0) scale(1); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(var(--nx), var(--ny)) scale(0.1); opacity: 0; }
         }
 
         .name-sparkle {
@@ -80,29 +60,90 @@
             box-shadow: 0 0 15px currentColor;
         }
 
-        /* Energy Section */
-        .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 25px auto; }
-        .energy-bar { width: 90px; height: 90px; position: relative; }
+        @keyframes fireworkBurst {
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(var(--nx), var(--ny)) scale(0.1); opacity: 0; }
+        }
+
+        /* --- CARTOON ANIMATION SECTION --- */
+        .cartoon-area {
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .walking-man {
+            position: absolute;
+            bottom: 10px;
+            left: -50px;
+            font-size: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: walkAcross 12s infinite linear;
+        }
+
+        .man-body { position: relative; }
+        
+        /* Dress Color Changing Animation */
+        @keyframes dressColor {
+            0% { color: #ffffff; }
+            33% { color: #ffeb3b; }
+            66% { color: #8bc34a; }
+            100% { color: #ffffff; }
+        }
+
+        .man-icon { 
+            animation: dressColor 10s infinite alternate ease-in-out;
+        }
+
+        .pointer-hand {
+            position: absolute;
+            top: 10px;
+            right: -25px;
+            font-size: 25px;
+            animation: pointDown 1s infinite alternate;
+        }
+
+        @keyframes walkAcross {
+            0% { left: -50px; transform: scaleX(1); }
+            45% { left: 80%; transform: scaleX(1); }
+            50% { left: 80%; transform: scaleX(-1); }
+            95% { left: -50px; transform: scaleX(-1); }
+            100% { left: -50px; transform: scaleX(1); }
+        }
+
+        @keyframes pointDown {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(15px); }
+        }
+
+        /* -------------------------------- */
+
+        .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 15px auto; }
+        .energy-bar { width: 80px; height: 80px; position: relative; }
         .energy-circle { width: 100%; height: 100%; border-radius: 50%; border: 3px solid rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; }
         .energy-fill { position: absolute; width: 100%; height: 100%; background: conic-gradient(var(--accent-gold) 40%, transparent 70%); animation: rotateEnergy 2s linear infinite; }
         .energy-center { 
-            position: absolute; width: 65px; height: 65px; background: rgba(0,0,0,0.8); border-radius: 50%; 
+            position: absolute; width: 55px; height: 55px; background: rgba(0,0,0,0.8); border-radius: 50%; 
             top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; 
-            color: var(--accent-gold); z-index: 2; border: 2px solid var(--accent-gold); font-size: 2.2rem;
+            color: var(--accent-gold); z-index: 2; border: 2px solid var(--accent-gold); font-size: 2rem;
         }
 
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .music-btn {
-            width: 45px; height: 45px; background: rgba(0, 0, 0, 0.4); color: var(--accent-gold);
+            width: 40px; height: 40px; background: rgba(0, 0, 0, 0.4); color: var(--accent-gold);
             border-radius: 50%; border: 2px solid var(--accent-gold); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Cards */
         .server-card, .main-card, .instructions {
             background: var(--bg-card); border: 2px solid var(--border-color);
-            border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center;
+            border-radius: 20px; padding: 25px; margin-bottom: 20px; text-align: center;
             backdrop-filter: blur(10px);
         }
 
@@ -111,13 +152,13 @@
         input[type="tel"] {
             width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4);
             border: 2px solid var(--border-color); border-radius: 12px;
-            color: #fff; font-size: 1rem; outline: none; text-align: center;
+            color: #fff; font-size: 1.1rem; outline: none; text-align: center;
         }
 
         .btn {
             width: 100%; padding: 16px; background: var(--accent-gold); color: #800000;
             border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
-            cursor: pointer; margin-top: 15px; transition: 0.3s;
+            cursor: pointer; margin-top: 15px;
         }
 
         .result-box {
@@ -139,14 +180,10 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 150px; --ny: -100px; color: #ff0044; left: 10%; animation-delay: 0s;"></div>
-                <div class="name-sparkle" style="--nx: -150px; --ny: 100px; color: #00ff66; right: 10%; animation-delay: 0.5s;"></div>
-                <div class="name-sparkle" style="--nx: 100px; --ny: 130px; color: #ffff00; left: 50%; animation-delay: 1s;"></div>
-                <div class="name-sparkle" style="--nx: -100px; --ny: -130px; color: #00ffff; right: 50%; animation-delay: 1.5s;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -160px; color: #ff00ff; top: 0; animation-delay: 2s;"></div>
-                <div class="name-sparkle" style="--nx: 180px; --ny: 50px; color: #ffffff; right: 0; animation-delay: 2.5s;"></div>
-                <div class="name-sparkle" style="--nx: -180px; --ny: -50px; color: #ff9900; left: 0; animation-delay: 3s;"></div>
-                <div class="name-sparkle" style="--nx: 50px; --ny: -180px; color: #00ffcc; top: 10%; animation-delay: 3.5s;"></div>
+                <div class="name-sparkle" style="--nx: 150px; --ny: -100px; color: #ff0044; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -150px; --ny: 100px; color: #00ff66; right: 10%;"></div>
+                <div class="name-sparkle" style="--nx: 100px; --ny: 130px; color: #ffff00; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -160px; color: #ff00ff; top: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -173,7 +210,16 @@
         </div>
 
         <div class="main-card">
-            <div style="color:var(--accent-gold); margin-bottom:15px; font-weight:700;">PAIRING CODE GENERATOR</div>
+            <div class="cartoon-area">
+                <div class="walking-man">
+                    <div class="man-body">
+                        <i class="fas fa-walking man-icon"></i>
+                        <div class="pointer-hand">👇</div>
+                    </div>
+                    <div style="font-size: 10px; color: var(--accent-gold); font-weight: bold;">Put Number</div>
+                </div>
+            </div>
+            
             <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX">
             <button class="btn" id="generateBtn">Generate Now</button>
             <div class="result-box" id="resultBox">
@@ -183,8 +229,7 @@
         </div>
 
         <div class="instructions">
-            <h4 style="color:var(--accent-gold);">Easy Steps:</h4>
-            <p style="font-size: 0.8rem; margin-top:10px; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
         </div>
 
         <div class="footer">© 2026 ADEEL-MINI | Support: 923035512967</div>
