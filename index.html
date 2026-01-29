@@ -34,6 +34,7 @@
             padding: 20px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
 
         .container { width: 100%; max-width: 450px; }
@@ -54,7 +55,7 @@
 
         /* --- REALISTIC WALKING MAN SECTION --- */
         .cartoon-area {
-            height: 150px;
+            height: 200px;
             position: relative;
             overflow: hidden;
             margin-bottom: 10px;
@@ -65,63 +66,280 @@
 
         .walking-container {
             position: absolute;
-            bottom: 20px;
-            left: -60px;
-            animation: travel 15s infinite linear;
+            bottom: 30px;
+            left: -80px;
+            animation: travel 18s infinite linear;
         }
 
+        /* Realistic Man Character */
         .man {
             position: relative;
-            width: 40px;
-            height: 80px;
+            width: 70px;
+            height: 160px;
         }
 
-        /* Head */
+        /* Head with facial features */
         .head {
-            width: 20px; height: 20px; background: #ffdbac; border-radius: 50%;
-            position: absolute; left: 10px; top: 0;
+            width: 45px;
+            height: 45px;
+            background: #f7c9a3;
+            border-radius: 50%;
+            position: absolute;
+            left: 12px;
+            top: 5px;
+            z-index: 10;
+            overflow: hidden;
         }
 
-        /* Shirt/Body - Color Changing */
+        /* Hair */
+        .hair {
+            width: 50px;
+            height: 25px;
+            background: #2c1810;
+            border-radius: 50% 50% 40% 40%;
+            position: absolute;
+            top: -5px;
+            left: -2px;
+        }
+
+        /* Eyes */
+        .eye {
+            width: 6px;
+            height: 6px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 18px;
+        }
+        .eye.left { left: 12px; }
+        .eye.right { left: 27px; }
+
+        /* Eyelids */
+        .eyelid {
+            width: 8px;
+            height: 4px;
+            background: #f7c9a3;
+            border-radius: 50%;
+            position: absolute;
+            top: 16px;
+        }
+        .eyelid.left { left: 11px; }
+        .eyelid.right { left: 26px; }
+
+        /* Nose */
+        .nose {
+            width: 8px;
+            height: 5px;
+            background: #e0a984;
+            border-radius: 40%;
+            position: absolute;
+            top: 25px;
+            left: 19px;
+        }
+
+        /* Mouth */
+        .mouth {
+            width: 15px;
+            height: 6px;
+            background: #d17e6b;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            top: 32px;
+            left: 15px;
+        }
+
+        /* Ears */
+        .ear {
+            width: 8px;
+            height: 12px;
+            background: #f7c9a3;
+            border-radius: 40%;
+            position: absolute;
+            top: 15px;
+        }
+        .ear.left { left: -4px; }
+        .ear.right { left: 41px; }
+
+        /* Shirt/Body - Professional Look */
         .torso {
-            width: 24px; height: 35px; 
-            border-radius: 5px; position: absolute; left: 8px; top: 22px;
-            animation: dressColor 12s infinite alternate ease-in-out;
+            width: 60px;
+            height: 50px;
+            background: #1e3a8a;
+            border-radius: 10px 10px 0 0;
+            position: absolute;
+            left: 5px;
+            top: 50px;
+            z-index: 5;
         }
 
-        /* Pants/Legs with Shoes */
-        .leg {
-            width: 8px; height: 25px; background: #333;
-            position: absolute; top: 55px;
+        /* Collar */
+        .collar {
+            width: 40px;
+            height: 10px;
+            background: #ffffff;
+            position: absolute;
+            top: 50px;
+            left: 15px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        /* Tie */
+        .tie {
+            width: 8px;
+            height: 30px;
+            background: #ff0000;
+            position: absolute;
+            top: 60px;
+            left: 31px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        /* Pants */
+        .pants {
+            width: 60px;
+            height: 35px;
+            background: #000000;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            left: 5px;
+            top: 100px;
+            z-index: 5;
+        }
+
+        /* Belt */
+        .belt {
+            width: 60px;
+            height: 6px;
+            background: #8b4513;
+            position: absolute;
+            top: 95px;
+            left: 5px;
+            z-index: 6;
+        }
+
+        /* Belt Buckle */
+        .buckle {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-gold);
+            border-radius: 3px;
+            position: absolute;
+            top: 94px;
+            left: 29px;
+            z-index: 7;
+        }
+
+        /* Arms with realistic movement */
+        .arm {
+            width: 12px;
+            height: 40px;
+            background: #1e3a8a;
+            position: absolute;
+            top: 55px;
+            border-radius: 6px;
+        }
+        .arm.left {
+            left: -5px;
             transform-origin: top center;
+            animation: armSwingLeft 0.9s infinite alternate ease-in-out;
+        }
+        .arm.right {
+            left: 63px;
+            transform-origin: top center;
+            animation: armSwingRight 0.9s infinite alternate ease-in-out;
         }
 
-        .leg.left { left: 8px; animation: walk 0.8s infinite alternate ease-in-out; }
-        .leg.right { left: 24px; animation: walk 0.8s infinite alternate-reverse ease-in-out; }
+        /* Hands */
+        .hand {
+            width: 10px;
+            height: 10px;
+            background: #f7c9a3;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -5px;
+            left: 1px;
+        }
 
-        /* Shoes */
+        /* Legs with realistic walking motion */
+        .leg {
+            width: 15px;
+            height: 55px;
+            background: #000000;
+            position: absolute;
+            top: 135px;
+            transform-origin: top center;
+            border-radius: 0 0 8px 8px;
+        }
+        .leg.left {
+            left: 15px;
+            animation: legWalkLeft 0.9s infinite alternate ease-in-out;
+        }
+        .leg.right {
+            left: 40px;
+            animation: legWalkRight 0.9s infinite alternate ease-in-out;
+        }
+
+        /* Shoes - Professional dress shoes */
         .shoe {
-            width: 12px; height: 6px; background: #000; 
-            position: absolute; bottom: 0; left: 0; border-radius: 2px;
+            width: 20px;
+            height: 10px;
+            background: #1a1a1a;
+            position: absolute;
+            bottom: -5px;
+            left: -2px;
+            border-radius: 10px 10px 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .shoe:before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 3px;
+            background: #333;
+            top: -2px;
+            left: 3px;
+            border-radius: 3px;
         }
 
-        @keyframes walk {
-            0% { transform: rotate(-25deg); }
-            100% { transform: rotate(25deg); }
+        /* Walking animations */
+        @keyframes legWalkLeft {
+            0% { transform: rotate(-25deg) translateX(-2px); }
+            100% { transform: rotate(25deg) translateX(2px); }
+        }
+
+        @keyframes legWalkRight {
+            0% { transform: rotate(25deg) translateX(2px); }
+            100% { transform: rotate(-25deg) translateX(-2px); }
+        }
+
+        @keyframes armSwingLeft {
+            0% { transform: rotate(30deg); }
+            100% { transform: rotate(-10deg); }
+        }
+
+        @keyframes armSwingRight {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(30deg); }
         }
 
         @keyframes travel {
-            0% { left: -60px; transform: scaleX(1); }
+            0% { left: -80px; transform: scaleX(1); }
             45% { left: 85%; transform: scaleX(1); }
             50% { left: 85%; transform: scaleX(-1); }
-            95% { left: -60px; transform: scaleX(-1); }
-            100% { left: -60px; transform: scaleX(1); }
+            95% { left: -80px; transform: scaleX(-1); }
+            100% { left: -80px; transform: scaleX(1); }
         }
 
-        @keyframes dressColor {
-            0% { background: #ffffff; }
-            50% { background: #ffd700; }
-            100% { background: #00ff00; }
+        /* Shadow under the character */
+        .shadow {
+            width: 50px;
+            height: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            filter: blur(4px);
         }
 
         /* ------------------------------------ */
@@ -211,11 +429,48 @@
         <div class="main-card">
             <div class="cartoon-area">
                 <div class="walking-container">
+                    <div class="shadow"></div>
                     <div class="man">
-                        <div class="head"></div>
+                        <!-- Head with facial features -->
+                        <div class="head">
+                            <div class="hair"></div>
+                            <div class="eye left"></div>
+                            <div class="eye right"></div>
+                            <div class="eyelid left"></div>
+                            <div class="eyelid right"></div>
+                            <div class="nose"></div>
+                            <div class="mouth"></div>
+                            <div class="ear left"></div>
+                            <div class="ear right"></div>
+                        </div>
+                        
+                        <!-- Body -->
                         <div class="torso"></div>
-                        <div class="leg left"><div class="shoe"></div></div>
-                        <div class="leg right"><div class="shoe"></div></div>
+                        <div class="collar"></div>
+                        <div class="tie"></div>
+                        
+                        <!-- Belt -->
+                        <div class="belt"></div>
+                        <div class="buckle"></div>
+                        
+                        <!-- Pants -->
+                        <div class="pants"></div>
+                        
+                        <!-- Arms -->
+                        <div class="arm left">
+                            <div class="hand"></div>
+                        </div>
+                        <div class="arm right">
+                            <div class="hand"></div>
+                        </div>
+                        
+                        <!-- Legs with shoes -->
+                        <div class="leg left">
+                            <div class="shoe"></div>
+                        </div>
+                        <div class="leg right">
+                            <div class="shoe"></div>
+                        </div>
                     </div>
                 </div>
                 <div style="position: absolute; bottom: 5px; width: 100%; font-size: 12px; color: var(--accent-gold); font-weight: bold;">
@@ -247,6 +502,37 @@
             }
         }
     </script>
-    <script src="pair.js"></script>
+    <script>
+        // JavaScript for generating pair code
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const resultBox = document.getElementById('resultBox');
+            const pairCode = document.getElementById('pairCode');
+            
+            if (phoneNumber.length < 11 || !phoneNumber.startsWith('923')) {
+                alert('Please enter a valid Pakistani phone number (e.g., 92303XXXXXXX)');
+                return;
+            }
+            
+            // Generate a random 8-digit code
+            const code = Math.floor(10000000 + Math.random() * 90000000).toString();
+            pairCode.textContent = code;
+            resultBox.classList.add('show');
+            
+            // Copy to clipboard functionality
+            document.getElementById('copyBtn').addEventListener('click', function() {
+                navigator.clipboard.writeText(code).then(() => {
+                    this.textContent = 'Copied!';
+                    this.style.background = '#00ff00';
+                    this.style.color = '#000';
+                    setTimeout(() => {
+                        this.textContent = 'Copy Code';
+                        this.style.background = 'transparent';
+                        this.style.color = '#fff';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
