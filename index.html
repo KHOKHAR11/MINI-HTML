@@ -40,88 +40,91 @@
 
         .header { text-align: center; margin-bottom: 20px; padding: 20px; position: relative; }
 
-        @keyframes slowColorChange {
-            0% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
-            14% { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
-            28% { color: #00ff00; text-shadow: 0 0 20px #00ff00; }
-            100% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
-        }
-
         .logo {
             font-size: 2.6rem; font-weight: 900; white-space: nowrap;
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
             animation: slowColorChange 35s infinite linear;
         }
 
-        .name-sparkle {
-            position: absolute; width: 7px; height: 7px; border-radius: 50%;
-            animation: fireworkBurst 5s infinite ease-in-out;
-            background: currentColor; pointer-events: none;
-            box-shadow: 0 0 15px currentColor;
+        @keyframes slowColorChange {
+            0% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
+            50% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
+            100% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
         }
 
-        @keyframes fireworkBurst {
-            0% { transform: translate(0, 0) scale(1); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(var(--nx), var(--ny)) scale(0.1); opacity: 0; }
-        }
-
-        /* --- CARTOON ANIMATION SECTION --- */
+        /* --- REALISTIC WALKING MAN SECTION --- */
         .cartoon-area {
-            height: 120px;
+            height: 150px;
             position: relative;
             overflow: hidden;
             margin-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px 15px 0 0;
         }
 
-        .walking-man {
+        .walking-container {
             position: absolute;
-            bottom: 10px;
-            left: -50px;
-            font-size: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: walkAcross 12s infinite linear;
+            bottom: 20px;
+            left: -60px;
+            animation: travel 15s infinite linear;
         }
 
-        .man-body { position: relative; }
-        
-        /* Dress Color Changing Animation */
+        .man {
+            position: relative;
+            width: 40px;
+            height: 80px;
+        }
+
+        /* Head */
+        .head {
+            width: 20px; height: 20px; background: #ffdbac; border-radius: 50%;
+            position: absolute; left: 10px; top: 0;
+        }
+
+        /* Shirt/Body - Color Changing */
+        .torso {
+            width: 24px; height: 35px; 
+            border-radius: 5px; position: absolute; left: 8px; top: 22px;
+            animation: dressColor 12s infinite alternate ease-in-out;
+        }
+
+        /* Pants/Legs with Shoes */
+        .leg {
+            width: 8px; height: 25px; background: #333;
+            position: absolute; top: 55px;
+            transform-origin: top center;
+        }
+
+        .leg.left { left: 8px; animation: walk 0.8s infinite alternate ease-in-out; }
+        .leg.right { left: 24px; animation: walk 0.8s infinite alternate-reverse ease-in-out; }
+
+        /* Shoes */
+        .shoe {
+            width: 12px; height: 6px; background: #000; 
+            position: absolute; bottom: 0; left: 0; border-radius: 2px;
+        }
+
+        @keyframes walk {
+            0% { transform: rotate(-25deg); }
+            100% { transform: rotate(25deg); }
+        }
+
+        @keyframes travel {
+            0% { left: -60px; transform: scaleX(1); }
+            45% { left: 85%; transform: scaleX(1); }
+            50% { left: 85%; transform: scaleX(-1); }
+            95% { left: -60px; transform: scaleX(-1); }
+            100% { left: -60px; transform: scaleX(1); }
+        }
+
         @keyframes dressColor {
-            0% { color: #ffffff; }
-            33% { color: #ffeb3b; }
-            66% { color: #8bc34a; }
-            100% { color: #ffffff; }
+            0% { background: #ffffff; }
+            50% { background: #ffd700; }
+            100% { background: #00ff00; }
         }
 
-        .man-icon { 
-            animation: dressColor 10s infinite alternate ease-in-out;
-        }
-
-        .pointer-hand {
-            position: absolute;
-            top: 10px;
-            right: -25px;
-            font-size: 25px;
-            animation: pointDown 1s infinite alternate;
-        }
-
-        @keyframes walkAcross {
-            0% { left: -50px; transform: scaleX(1); }
-            45% { left: 80%; transform: scaleX(1); }
-            50% { left: 80%; transform: scaleX(-1); }
-            95% { left: -50px; transform: scaleX(-1); }
-            100% { left: -50px; transform: scaleX(1); }
-        }
-
-        @keyframes pointDown {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(15px); }
-        }
-
-        /* -------------------------------- */
+        /* ------------------------------------ */
 
         .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 15px auto; }
         .energy-bar { width: 80px; height: 80px; position: relative; }
@@ -180,10 +183,6 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 150px; --ny: -100px; color: #ff0044; left: 10%;"></div>
-                <div class="name-sparkle" style="--nx: -150px; --ny: 100px; color: #00ff66; right: 10%;"></div>
-                <div class="name-sparkle" style="--nx: 100px; --ny: 130px; color: #ffff00; left: 50%;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -160px; color: #ff00ff; top: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -211,12 +210,16 @@
 
         <div class="main-card">
             <div class="cartoon-area">
-                <div class="walking-man">
-                    <div class="man-body">
-                        <i class="fas fa-walking man-icon"></i>
-                        <div class="pointer-hand">👇</div>
+                <div class="walking-container">
+                    <div class="man">
+                        <div class="head"></div>
+                        <div class="torso"></div>
+                        <div class="leg left"><div class="shoe"></div></div>
+                        <div class="leg right"><div class="shoe"></div></div>
                     </div>
-                    <div style="font-size: 10px; color: var(--accent-gold); font-weight: bold;">Put Number</div>
+                </div>
+                <div style="position: absolute; bottom: 5px; width: 100%; font-size: 12px; color: var(--accent-gold); font-weight: bold;">
+                    Enter Number Below
                 </div>
             </div>
             
@@ -226,10 +229,6 @@
                 <div class="pair-code" id="pairCode">--------</div>
                 <button style="background:transparent; border:1px solid var(--accent-gold); color:#fff; padding:10px; border-radius:5px; cursor:pointer;" id="copyBtn">Copy Code</button>
             </div>
-        </div>
-
-        <div class="instructions">
-            <p style="font-size: 0.8rem; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
         </div>
 
         <div class="footer">© 2026 ADEEL-MINI | Support: 923035512967</div>
