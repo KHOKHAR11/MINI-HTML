@@ -1,5 +1,3 @@
-</body>
-</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +39,6 @@
 
         .container { width: 100%; max-width: 450px; position: relative; }
 
-        /* Birds */
         .bird {
             position: absolute; color: rgba(255,215,0,0.4); font-size: 12px;
             animation: fly 15s infinite linear; pointer-events: none; z-index: 1;
@@ -68,6 +65,7 @@
             position: relative;
         }
 
+        /* --- 3X INCREASED NAME SPARKLES --- */
         .name-sparkle {
             position: absolute; width: 6px; height: 6px; border-radius: 50%;
             animation: fireworkBurst 4s infinite ease-in-out;
@@ -81,7 +79,6 @@
             100% { transform: translate(var(--nx), var(--ny)) scale(0.1); opacity: 0; }
         }
 
-        /* --- BOXES WITH 3X PARTICLES --- */
         @keyframes borderRainbow {
             0% { border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
             33% { border-color: #ff00ff; box-shadow: 0 0 15px rgba(255,0,255,0.4); }
@@ -98,7 +95,6 @@
             position: relative; overflow: hidden;
         }
 
-        /* INCREASED PARTICLES & MIXED ELEMENTS */
         .particle {
             position: absolute; color: var(--accent-gold);
             font-size: 8px; opacity: 0; animation: fall linear infinite;
@@ -109,7 +105,6 @@
             100% { transform: translateY(250px) rotate(360deg); opacity: 0; }
         }
 
-        /* Walking Man */
         .cartoon-box { height: 90px; position: relative; overflow: hidden; margin-bottom: 15px; }
         .walking-man { position: absolute; bottom: 5px; left: -50px; animation: moveAcross 12s infinite linear; transform: scale(0.5); }
         .human { position: relative; width: 50px; height: 110px; }
@@ -162,7 +157,15 @@
                 <div class="name-sparkle" style="--nx: 160px; --ny: -110px; color: #ff0044; left: 10%;"></div>
                 <div class="name-sparkle" style="--nx: -160px; --ny: 110px; color: #00ff66; right: 10%;"></div>
                 <div class="name-sparkle" style="--nx: 120px; --ny: 140px; color: #ffff00; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: -120px; --ny: -140px; color: #00ffff; right: 50%;"></div>
                 <div class="name-sparkle" style="--nx: 0px; --ny: -170px; color: #ff00ff; top: 0;"></div>
+                <div class="name-sparkle" style="--nx: 180px; --ny: 0px; color: #ffffff; right: -10%;"></div>
+                <div class="name-sparkle" style="--nx: -180px; --ny: 0px; color: #ff9900; left: -10%;"></div>
+                <div class="name-sparkle" style="--nx: 60px; --ny: -190px; color: #00ffcc; top: -20%;"></div>
+                <div class="name-sparkle" style="--nx: -60px; --ny: 190px; color: #ff3300; bottom: -20%;"></div>
+                <div class="name-sparkle" style="--nx: 130px; --ny: -60px; color: #fff; left: 20%;"></div>
+                <div class="name-sparkle" style="--nx: -130px; --ny: 60px; color: #ffd700; right: 20%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: 180px; color: #ff0055; bottom: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -179,14 +182,9 @@
 
         <div class="server-card">
             <div class="particle" style="left: 5%; animation-duration: 4s;">✨</div>
-            <div class="particle" style="left: 15%; animation-duration: 6s; animation-delay: 1s;">.</div>
             <div class="particle" style="left: 25%; animation-duration: 3s;">💎</div>
-            <div class="particle" style="left: 35%; animation-duration: 5s; animation-delay: 2s;">*</div>
             <div class="particle" style="left: 50%; animation-duration: 4s;">✨</div>
-            <div class="particle" style="left: 65%; animation-duration: 7s; animation-delay: 1.5s;">💎</div>
             <div class="particle" style="left: 80%; animation-duration: 5s;">.</div>
-            <div class="particle" style="left: 95%; animation-duration: 4s; animation-delay: 0.5s;">*</div>
-            
             <div style="display: flex; justify-content: space-evenly; position: relative; z-index: 2;">
                 <div><span style="color:var(--accent-gold); font-size:1.8rem; font-weight:800;">50</span><br><small>Limit</small></div>
                 <div style="width:1px; background:var(--accent-gold); opacity: 0.3;"></div>
@@ -196,14 +194,9 @@
 
         <div class="main-card">
             <div class="particle" style="left: 10%; animation-duration: 5s;">💎</div>
-            <div class="particle" style="left: 20%; animation-duration: 4s; animation-delay: 1s;">✨</div>
             <div class="particle" style="left: 30%; animation-duration: 6s;">.</div>
-            <div class="particle" style="left: 45%; animation-duration: 3s; animation-delay: 2s;">*</div>
             <div class="particle" style="left: 60%; animation-duration: 5s;">✨</div>
-            <div class="particle" style="left: 75%; animation-duration: 4s; animation-delay: 1.5s;">💎</div>
-            <div class="particle" style="left: 85%; animation-duration: 6s;">.</div>
-            <div class="particle" style="left: 95%; animation-duration: 5s; animation-delay: 0.5s;">✨</div>
-
+            <div class="particle" style="left: 95%; animation-duration: 5s;">✨</div>
             <div class="cartoon-box">
                 <div class="walking-man">
                     <div class="human">
@@ -219,10 +212,6 @@
         </div>
 
         <div class="instructions">
-            <div class="particle" style="left: 15%; animation-duration: 5s;">✨</div>
-            <div class="particle" style="left: 50%; animation-duration: 4s; animation-delay: 2s;">💎</div>
-            <div class="particle" style="left: 85%; animation-duration: 6s;">*</div>
-            
             <h4 style="color:var(--accent-gold);">Easy Steps:</h4>
             <p style="font-size: 0.8rem; margin-top:10px;">Enter number -> Wait for Code -> Link in WhatsApp.</p>
         </div>
