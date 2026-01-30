@@ -65,17 +65,18 @@
             position: relative;
         }
 
-        /* --- NEW SOFT TWINKLE ANIMATION (NOT BURSTING) --- */
+        /* --- 3X INCREASED NAME SPARKLES --- */
         .name-sparkle {
-            position: absolute; width: 5px; height: 5px; border-radius: 50%;
-            animation: twinkle 3s infinite ease-in-out;
+            position: absolute; width: 6px; height: 6px; border-radius: 50%;
+            animation: fireworkBurst 4s infinite ease-in-out;
             background: currentColor; pointer-events: none;
-            box-shadow: 0 0 10px currentColor;
+            box-shadow: 0 0 12px currentColor;
         }
 
-        @keyframes twinkle {
-            0%, 100% { transform: scale(0.5); opacity: 0.2; }
-            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 15px currentColor; }
+        @keyframes fireworkBurst {
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(var(--nx), var(--ny)) scale(0.1); opacity: 0; }
         }
 
         @keyframes borderRainbow {
@@ -153,18 +154,18 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="top: -15px; left: 10%; color: #ff0044; animation-delay: 0s;"></div>
-                <div class="name-sparkle" style="top: 20px; right: -10%; color: #00ff66; animation-delay: 0.5s;"></div>
-                <div class="name-sparkle" style="bottom: -10px; left: 50%; color: #ffff00; animation-delay: 1s;"></div>
-                <div class="name-sparkle" style="top: -20px; right: 40%; color: #00ffff; animation-delay: 1.5s;"></div>
-                <div class="name-sparkle" style="top: 0; left: -15%; color: #ff00ff; animation-delay: 2s;"></div>
-                <div class="name-sparkle" style="bottom: 10px; right: 10%; color: #ffffff; animation-delay: 2.5s;"></div>
-                <div class="name-sparkle" style="top: 50%; left: -20%; color: #ff9900; animation-delay: 1.2s;"></div>
-                <div class="name-sparkle" style="top: -25px; left: 60%; color: #00ffcc; animation-delay: 0.8s;"></div>
-                <div class="name-sparkle" style="bottom: -20px; right: 30%; color: #ff3300; animation-delay: 2.2s;"></div>
-                <div class="name-sparkle" style="top: 10px; left: 20%; color: #fff; animation-delay: 1.7s;"></div>
-                <div class="name-sparkle" style="top: 40px; right: 50%; color: #ffd700; animation-delay: 0.3s;"></div>
-                <div class="name-sparkle" style="bottom: 5px; left: 5%; color: #ff0055; animation-delay: 1.1s;"></div>
+                <div class="name-sparkle" style="--nx: 160px; --ny: -110px; color: #ff0044; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -160px; --ny: 110px; color: #00ff66; right: 10%;"></div>
+                <div class="name-sparkle" style="--nx: 120px; --ny: 140px; color: #ffff00; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: -120px; --ny: -140px; color: #00ffff; right: 50%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -170px; color: #ff00ff; top: 0;"></div>
+                <div class="name-sparkle" style="--nx: 180px; --ny: 0px; color: #ffffff; right: -10%;"></div>
+                <div class="name-sparkle" style="--nx: -180px; --ny: 0px; color: #ff9900; left: -10%;"></div>
+                <div class="name-sparkle" style="--nx: 60px; --ny: -190px; color: #00ffcc; top: -20%;"></div>
+                <div class="name-sparkle" style="--nx: -60px; --ny: 190px; color: #ff3300; bottom: -20%;"></div>
+                <div class="name-sparkle" style="--nx: 130px; --ny: -60px; color: #fff; left: 20%;"></div>
+                <div class="name-sparkle" style="--nx: -130px; --ny: 60px; color: #ffd700; right: 20%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: 180px; color: #ff0055; bottom: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
@@ -182,6 +183,8 @@
         <div class="server-card">
             <div class="particle" style="left: 5%; animation-duration: 4s;">✨</div>
             <div class="particle" style="left: 25%; animation-duration: 3s;">💎</div>
+            <div class="particle" style="left: 50%; animation-duration: 4s;">✨</div>
+            <div class="particle" style="left: 80%; animation-duration: 5s;">.</div>
             <div style="display: flex; justify-content: space-evenly; position: relative; z-index: 2;">
                 <div><span style="color:var(--accent-gold); font-size:1.8rem; font-weight:800;">50</span><br><small>Limit</small></div>
                 <div style="width:1px; background:var(--accent-gold); opacity: 0.3;"></div>
@@ -190,6 +193,10 @@
         </div>
 
         <div class="main-card">
+            <div class="particle" style="left: 10%; animation-duration: 5s;">💎</div>
+            <div class="particle" style="left: 30%; animation-duration: 6s;">.</div>
+            <div class="particle" style="left: 60%; animation-duration: 5s;">✨</div>
+            <div class="particle" style="left: 95%; animation-duration: 5s;">✨</div>
             <div class="cartoon-box">
                 <div class="walking-man">
                     <div class="human">
@@ -202,6 +209,11 @@
             </div>
             <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX">
             <button class="btn" id="generateBtn">Generate Now</button>
+        </div>
+
+        <div class="instructions">
+            <h4 style="color:var(--accent-gold);">Easy Steps:</h4>
+            <p style="font-size: 0.8rem; margin-top:10px;">Enter number -> Wait for Code -> Link in WhatsApp.</p>
         </div>
 
         <div class="footer">© 2026 ADEEL-MINI | Support: 923035512967</div>
