@@ -12,8 +12,7 @@
             --accent-gold: #ffd700;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.8);
-            --border-glow: #ffd700;
-            --bg-card: rgba(0, 0, 0, 0.5); 
+            --bg-card: rgba(0, 0, 0, 0.6); 
             --skin: #ffdbac;
         }
 
@@ -38,71 +37,72 @@
         }
 
         .container { width: 100%; max-width: 450px; }
-        .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
 
+        /* --- LOGO & SPARKLES --- */
+        .header { text-align: center; margin-bottom: 30px; padding: 20px; position: relative; }
         @keyframes slowColorChange {
             0% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
             33% { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
             66% { color: #00ff00; text-shadow: 0 0 20px #00ff00; }
             100% { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
         }
+        .logo { font-size: 2.6rem; font-weight: 900; animation: slowColorChange 10s infinite linear; position: relative; }
 
-        .logo {
-            font-size: 2.6rem; font-weight: 900; white-space: nowrap; 
-            display: inline-flex; align-items: center; justify-content: center;
-            gap: 10px; animation: slowColorChange 10s infinite linear;
-            position: relative;
-        }
-
-        /* --- MORE SPARKLES (3X INCREASED) --- */
         .name-sparkle {
             position: absolute; width: 6px; height: 6px; border-radius: 50%;
             animation: fireworkBurst 4s infinite ease-in-out;
-            background: currentColor; pointer-events: none;
-            box-shadow: 0 0 12px currentColor;
+            background: currentColor; pointer-events: none; box-shadow: 0 0 12px currentColor;
         }
-
         @keyframes fireworkBurst {
             0% { transform: translate(0, 0) scale(1); opacity: 0; }
             20% { opacity: 1; }
             100% { transform: translate(var(--nx), var(--ny)) scale(0.1); opacity: 0; }
         }
 
-        /* --- ANIMATED BOX BORDERS --- */
-        @keyframes borderRainbow {
-            0% { border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
-            33% { border-color: #ff00ff; box-shadow: 0 0 15px rgba(255,0,255,0.4); }
-            66% { border-color: #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-            100% { border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+        /* --- SLOW RAINBOW BORDER & PARTICLES --- */
+        @keyframes slowBorderRainbow {
+            0% { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+            25% { border-color: #ff0055; box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+            50% { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
+            75% { border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); }
+            100% { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
         }
 
-        .server-card, .main-card, .instructions {
+        .animated-card {
             background: var(--bg-card); 
             border: 2px solid var(--accent-gold);
-            border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center;
-            backdrop-filter: blur(10px);
-            animation: borderRainbow 6s infinite linear; /* Colorful edges */
+            border-radius: 20px; padding: 25px; margin-bottom: 25px; 
+            text-align: center; backdrop-filter: blur(12px);
+            animation: slowBorderRainbow 12s infinite linear;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Small particles falling inside box borders */
+        .animated-card::before {
+            content: "✨"; position: absolute; top: -10px; left: 10%;
+            font-size: 10px; animation: particlesFall 5s infinite linear; opacity: 0.6;
+        }
+        .animated-card::after {
+            content: "❄️"; position: absolute; top: -10px; right: 20%;
+            font-size: 8px; animation: particlesFall 7s infinite linear; opacity: 0.4;
+        }
+
+        @keyframes particlesFall {
+            0% { transform: translateY(-10px) translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(200px) translateX(20px); opacity: 0; }
         }
 
         /* Walking Man (50% Size) */
-        .cartoon-box { height: 90px; position: relative; overflow: hidden; margin-bottom: 15px; }
         .walking-man { position: absolute; bottom: 5px; left: -50px; animation: moveAcross 12s infinite linear; transform: scale(0.5); }
         .human { position: relative; width: 50px; height: 110px; }
         .h-head { width: 30px; height: 38px; background: var(--skin); border-radius: 40% 40% 50% 50%; position: absolute; left: 10px; top: 0; z-index: 10; }
-        .h-hair { width: 34px; height: 18px; background: #222; position: absolute; top: -4px; left: -2px; border-radius: 15px 15px 5px 5px; }
-        .h-ear { width: 6px; height: 10px; background: var(--skin); position: absolute; top: 15px; border-radius: 50%; }
-        .h-ear.l { left: -4px; } .h-ear.r { right: -4px; }
-        .h-nose { width: 4px; height: 7px; background: rgba(0,0,0,0.1); position: absolute; left: 13px; top: 20px; border-radius: 2px; }
         .h-shirt { width: 36px; height: 45px; border-radius: 8px; position: absolute; left: 7px; top: 38px; z-index: 5; background: var(--accent-gold); }
-        .h-arm { width: 9px; height: 38px; background: var(--skin); position: absolute; top: 42px; transform-origin: top center; border-radius: 5px; }
-        .h-arm.l { left: -2px; animation: swing 0.8s infinite alternate; }
-        .h-arm.r { right: -2px; animation: swing 0.8s infinite alternate-reverse; }
         .h-leg { width: 11px; height: 35px; background: #333; position: absolute; top: 80px; transform-origin: top center; }
         .h-leg.l { left: 8px; animation: legSwing 0.8s infinite alternate; }
         .h-leg.r { left: 24px; animation: legSwing 0.8s infinite alternate-reverse; }
-        .h-shoe { width: 18px; height: 8px; background: #111; position: absolute; bottom: -5px; border-radius: 3px 8px 2px 2px; }
 
-        @keyframes swing { 0% { transform: rotate(-20deg); } 100% { transform: rotate(20deg); } }
         @keyframes legSwing { 0% { transform: rotate(-30deg); } 100% { transform: rotate(30deg); } }
         @keyframes moveAcross {
             0% { left: -50px; transform: scale(0.5) scaleX(1); }
@@ -112,6 +112,7 @@
             100% { left: -50px; transform: scale(0.5) scaleX(1); }
         }
 
+        /* Rest of Styles */
         .energy-wrapper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 25px auto; }
         .energy-bar { width: 90px; height: 90px; position: relative; }
         .energy-circle { width: 100%; height: 100%; border-radius: 50%; border: 3px solid rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; }
@@ -121,40 +122,10 @@
             top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; 
             color: var(--accent-gold); z-index: 2; border: 2px solid var(--accent-gold); font-size: 2.2rem;
         }
-
         @keyframes rotateEnergy { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .music-btn {
-            width: 45px; height: 45px; background: rgba(0, 0, 0, 0.4); color: var(--accent-gold);
-            border-radius: 50%; border: 2px solid var(--accent-gold); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .stat-value { color: var(--accent-gold); font-weight: 800; font-size: 1.8rem; }
-        
-        input[type="tel"] {
-            width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4);
-            border: 2px solid var(--border-color); border-radius: 12px;
-            color: #fff; font-size: 1rem; outline: none; text-align: center;
-        }
-
-        .btn {
-            width: 100%; padding: 16px; background: var(--accent-gold); color: #800000;
-            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800;
-            cursor: pointer; margin-top: 15px; transition: 0.3s;
-        }
-
-        .result-box {
-            background: rgba(255, 255, 255, 0.1); border: 2px dashed var(--accent-gold);
-            border-radius: 15px; padding: 20px; margin-top: 20px; display: none;
-        }
-        .result-box.show { display: block; }
-
-        .pair-code {
-            font-size: 2.2rem; font-weight: 900; letter-spacing: 5px; color: var(--accent-gold);
-            margin: 15px 0; background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 12px;
-        }
-
+        input[type="tel"] { width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255,215,0,0.3); border-radius: 12px; color: #fff; text-align: center; outline: none; }
+        .btn { width: 100%; padding: 16px; background: var(--accent-gold); color: #800000; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; }
         .footer { text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.8rem; }
     </style>
 </head>
@@ -163,71 +134,50 @@
         <div class="header">
             <div class="logo">
                 <i class="fab fa-whatsapp"></i> ADEEL-MINI
-                <div class="name-sparkle" style="--nx: 160px; --ny: -110px; color: #ff0044; left: 10%; animation-delay: 0s;"></div>
-                <div class="name-sparkle" style="--nx: -160px; --ny: 110px; color: #00ff66; right: 10%; animation-delay: 0.5s;"></div>
-                <div class="name-sparkle" style="--nx: 120px; --ny: 140px; color: #ffff00; left: 50%; animation-delay: 1s;"></div>
-                <div class="name-sparkle" style="--nx: -120px; --ny: -140px; color: #00ffff; right: 50%; animation-delay: 1.5s;"></div>
-                <div class="name-sparkle" style="--nx: 0px; --ny: -170px; color: #ff00ff; top: 0; animation-delay: 2s;"></div>
-                <div class="name-sparkle" style="--nx: 190px; --ny: 60px; color: #ffffff; right: 0; animation-delay: 2.5s;"></div>
-                <div class="name-sparkle" style="--nx: -190px; --ny: -60px; color: #ff9900; left: 0; animation-delay: 3s;"></div>
-                <div class="name-sparkle" style="--nx: 60px; --ny: -190px; color: #00ffcc; top: 10%; animation-delay: 3.5s;"></div>
-                <div class="name-sparkle" style="--nx: -60px; --ny: 190px; color: #ff3300; bottom: 10%; animation-delay: 4s;"></div>
-                <div class="name-sparkle" style="--nx: 100px; --ny: -50px; color: #fff; left: 20%; animation-delay: 1.2s;"></div>
-                <div class="name-sparkle" style="--nx: -100px; --ny: 50px; color: #ffd700; right: 20%; animation-delay: 2.2s;"></div>
+                <div class="name-sparkle" style="--nx: 160px; --ny: -110px; color: #ff0044; left: 10%;"></div>
+                <div class="name-sparkle" style="--nx: -160px; --ny: 110px; color: #00ff66; right: 10%;"></div>
+                <div class="name-sparkle" style="--nx: 120px; --ny: 140px; color: #ffff00; left: 50%;"></div>
+                <div class="name-sparkle" style="--nx: 0px; --ny: -170px; color: #ff00ff; top: 0;"></div>
             </div>
             
             <div class="energy-wrapper">
-                <button class="music-btn" onclick="toggleMusic('music1', this)"><i class="fas fa-play"></i></button>
+                <button class="music-btn" style="width:45px; height:45px; border-radius:50%; border:2px solid var(--accent-gold); background:none; color:gold;" onclick="toggleMusic('music1', this)"><i class="fas fa-play"></i></button>
                 <div class="energy-bar">
-                    <div class="energy-circle">
-                        <div class="energy-fill"></div>
-                        <div class="energy-center">🎩</div> 
-                    </div>
+                    <div class="energy-circle"><div class="energy-fill"></div><div class="energy-center">🎩</div></div>
                 </div>
-                <button class="music-btn" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
+                <button class="music-btn" style="width:45px; height:45px; border-radius:50%; border:2px solid var(--accent-gold); background:none; color:gold;" onclick="toggleMusic('music2', this)"><i class="fas fa-play"></i></button>
             </div>
         </div>
 
         <audio id="music1" loop><source src="https://files.catbox.moe/s374zm.mp3" type="audio/mpeg"></audio>
         <audio id="music2" loop><source src="https://files.catbox.moe/l6ijvv.mp3" type="audio/mpeg"></audio>
 
-        <div class="server-card">
+        <div class="animated-card">
             <div style="display: flex; justify-content: space-evenly;">
-                <div><span class="stat-value">50</span><br><small>Limit</small></div>
-                <div style="width:1px; background:var(--border-color);"></div>
-                <div><span class="stat-value" style="color:#00ff00;">●</span><br><small>Online</small></div>
+                <div><span style="color:var(--accent-gold); font-size:1.8rem; font-weight:800;">50</span><br><small>Limit</small></div>
+                <div style="width:1px; background:rgba(255,215,0,0.3);"></div>
+                <div><span style="color:#00ff00; font-size:1.8rem;">●</span><br><small>Online</small></div>
             </div>
         </div>
 
-        <div class="main-card">
-            <div class="cartoon-box">
+        <div class="animated-card">
+            <div style="height: 90px; position: relative; overflow: hidden;">
                 <div class="walking-man">
                     <div class="human">
-                        <div class="h-head">
-                            <div class="h-hair"></div>
-                            <div class="h-ear l"></div><div class="h-ear r"></div>
-                            <div class="h-nose"></div>
-                        </div>
-                        <div class="h-arm l"></div><div class="h-arm r"></div>
+                        <div class="h-head"><div style="width:34px; height:18px; background:#222; position:absolute; top:-4px; left:-2px; border-radius:15px;"></div></div>
                         <div class="h-shirt"></div>
-                        <div class="h-leg l"><div class="h-shoe"></div></div>
-                        <div class="h-leg r"><div class="h-shoe"></div></div>
+                        <div class="h-leg l"></div><div class="h-leg r"></div>
                     </div>
                 </div>
-                <div style="color:var(--accent-gold); margin-bottom:15px; font-weight:700; margin-top: 60px;">PAIRING CODE GENERATOR</div>
+                <div style="color:var(--accent-gold); font-weight:700; margin-top: 60px;">PAIRING CODE GENERATOR</div>
             </div>
-            
             <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX">
             <button class="btn" id="generateBtn">Generate Now</button>
-            <div class="result-box" id="resultBox">
-                <div class="pair-code" id="pairCode">--------</div>
-                <button style="background:transparent; border:1px solid var(--accent-gold); color:#fff; padding:10px; border-radius:5px; cursor:pointer;" id="copyBtn">Copy Code</button>
-            </div>
         </div>
 
-        <div class="instructions">
+        <div class="animated-card">
             <h4 style="color:var(--accent-gold);">Easy Steps:</h4>
-            <p style="font-size: 0.8rem; margin-top:10px; color: var(--text-secondary);">Enter number -> Wait for Code -> Link in WhatsApp.</p>
+            <p style="font-size: 0.8rem; margin-top:10px;">Enter number -> Wait for Code -> Link in WhatsApp.</p>
         </div>
 
         <div class="footer">© 2026 ADEEL-MINI | Support: 923035512967</div>
