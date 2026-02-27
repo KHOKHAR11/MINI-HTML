@@ -3,168 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADEEL-AI | Server Pairing</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>ADEEL-AI | Premium Pairing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #4a0000;
-            --pure-red: #ff0000;
+            --primary-red: #ff0000;
+            --dark-red: #4a0000;
             --accent-gold: #ffd700;
-            --text-white: #ffffff;
+            --bg-black: #0a0a0a;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: linear-gradient(180deg, #600000 0%, #000000 100%);
-            color: var(--text-white);
+            background: linear-gradient(to bottom, var(--dark-red), var(--bg-black));
+            color: white;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             padding: 20px;
         }
 
-        .container { width: 100%; max-width: 450px; }
+        .container { width: 100%; max-width: 450px; text-align: center; }
 
-        /* Server Selection Styling */
-        .server-box {
-            background: rgba(255, 0, 0, 0.1);
-            border: 2px solid var(--pure-red);
-            border-radius: 15px;
-            padding: 15px;
+        .logo-area { margin-bottom: 30px; }
+        .logo-area i { font-size: 50px; color: var(--accent-gold); margin-bottom: 10px; }
+        .logo-area h1 { font-weight: 900; letter-spacing: 2px; color: var(--primary-red); }
+
+        /* Server Selection Style */
+        .server-container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--primary-red);
+            border-radius: 20px;
+            padding: 20px;
             margin-bottom: 20px;
+        }
+
+        .server-option {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .server-option.active { border-color: var(--accent-gold); background: #2a0000; }
+        .server-option span { color: var(--accent-gold); font-size: 0.9rem; }
+
+        .input-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--primary-red);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--accent-gold);
+            color: white;
+            padding: 10px;
+            font-size: 1.2rem;
             text-align: center;
+            outline: none;
+        }
+
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-red), #ff5555);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 15px;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
         }
 
-        select {
-            width: 100%;
-            padding: 12px;
-            background: #200000;
-            color: white;
-            border: 1px solid var(--pure-red);
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .main-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid var(--pure-red);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--pure-red);
-            text-shadow: 0 0 15px var(--pure-red);
-            margin-bottom: 20px;
-        }
-
-        input[type="tel"] {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--pure-red);
-            border-radius: 10px;
-            color: white;
-            text-align: center;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--pure-red);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn:hover { background: #cc0000; transform: scale(1.02); }
-
         .result-box {
-            margin-top: 25px;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.5);
             padding: 20px;
-            border: 2px dashed var(--accent-gold);
             border-radius: 15px;
+            border: 1px dashed var(--accent-gold);
             display: none;
         }
-        .result-box.show { display: block; animation: fadeIn 0.5s; }
 
-        .pair-code {
-            font-size: 2.5rem;
+        .pairing-code {
+            font-size: 2.2rem;
             font-weight: 900;
             color: var(--accent-gold);
             letter-spacing: 5px;
-            margin: 10px 0;
         }
-
-        /* Falling Particles Animation */
-        .particle {
-            position: absolute;
-            background: var(--pure-red);
-            width: 3px; height: 3px;
-            opacity: 0.5;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            to { transform: translateY(500px); }
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo"><i class="fab fa-whatsapp"></i> ADEEL-AI</div>
-
-        <div class="server-box">
-            <p style="margin-bottom: 8px; font-weight: bold; color: var(--accent-gold);">SELECT ACTIVE SERVER</p>
-            <select id="serverSelect">
-                <option value="https://adeel-mini-c947a70d0ed8.herokuapp.com/code">Server 1 (Default)</option>
-                <option value="https://adeel-mini-c6uuy7a70d0ed8.herokuapp.com/code">Server 2 (Primary)</option>
-                <option value="https://adeel-mini-c947a70e900d8.herokuapp.com/code">Server 3 (Backup)</option>
-            </select>
+        <div class="logo-area">
+            <i class="fas fa-crown"></i>
+            <h1>ADEEL-AI</h1>
+            <p>Premium Pairing Code Generator</p>
         </div>
 
-        <div class="main-card">
-            <div class="particle" style="left:10%; animation-duration:4s;"></div>
-            <div class="particle" style="left:50%; animation-duration:6s;"></div>
-            <div class="particle" style="left:80%; animation-duration:5s;"></div>
-
-            <p style="margin-bottom: 20px; color: #ccc;">Enter your WhatsApp number with country code</p>
-            
-            <input type="tel" id="phoneNumber" placeholder="92303XXXXXXX">
-            <button class="btn" id="generateBtn" onclick="getPairCode()">Generate Code</button>
-
-            <div class="result-box" id="resultBox">
-                <p>Your Pairing Code:</p>
-                <div class="pair-code" id="pairCode">--------</div>
-                <button class="btn" style="background:transparent; border:1px solid white; padding:10px;" onclick="copyCode()" id="copyBtn">Copy Code</button>
+        <div class="server-container">
+            <h3 style="color: var(--accent-gold); margin-bottom: 15px;"><i class="fas fa-bolt"></i> Select a Server</h3>
+            <div class="server-option active" onclick="selectServer(this, 'https://adeel-mini-c947a70d0ed8.herokuapp.com/code')">
+                <div>Server 1</div> <span id="s1-status">Click to select</span>
+            </div>
+            <div class="server-option" onclick="selectServer(this, 'https://adeel-mini-c6uuy7a70d0ed8.herokuapp.com/code')">
+                <div>Server 2</div> <span id="s2-status">Click to select</span>
+            </div>
+            <div class="server-option" onclick="selectServer(this, 'https://adeel-mini-c947a70e900d8.herokuapp.com/code')">
+                <div>Server 3</div> <span id="s3-status">Click to select</span>
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: #888;">
-            © 2026 ADEEL-AI PRO SYSTEM<br>
-            All Rights Reserved.
+        <div class="input-box">
+            <p style="font-size: 0.9rem; margin-bottom: 10px;">Enter WhatsApp Number</p>
+            <input type="tel" id="phoneNumber" placeholder="923035512967">
+            <button class="btn-generate" onclick="generateCode()">Generate Pair Code</button>
         </div>
+
+        <div class="result-box" id="resultBox">
+            <p style="color: #888;">Your pairing code will appear here</p>
+            <div class="pairing-code" id="pairCode">--------</div>
+            <button onclick="copyCode()" style="background:none; border:1px solid #555; color:white; padding:5px 15px; border-radius:5px; margin-top:10px; cursor:pointer;">Copy</button>
+        </div>
+
+        <p style="font-size: 0.7rem; color: #666; margin-top: 30px;">© 2026 ADEEL-AI | Powered By DEVELOPER</p>
     </div>
 
-    <script src="script.js"></script>
+    <script src="pair.js"></script>
 </body>
 </html>
