@@ -3,145 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADEEL-AI | Premium Pairing</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+    <title>ADEEL-AI | Server System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-red: #ff0000;
-            --dark-red: #4a0000;
-            --accent-gold: #ffd700;
-            --bg-black: #0a0a0a;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(to bottom, var(--dark-red), var(--bg-black));
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container { width: 100%; max-width: 450px; text-align: center; }
-
-        .logo-area { margin-bottom: 30px; }
-        .logo-area i { font-size: 50px; color: var(--accent-gold); margin-bottom: 10px; }
-        .logo-area h1 { font-weight: 900; letter-spacing: 2px; color: var(--primary-red); }
-
-        /* Server Selection Style */
-        .server-container {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--primary-red);
+        :root { --p-red: #ff0000; --gold: #ffd700; --bg: #0a0a0a; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; }
+        
+        /* Main Server Card */
+        .server-selector-card {
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid var(--p-red);
             border-radius: 20px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
+            cursor: pointer;
         }
 
-        .server-option {
-            background: #1a1a1a;
+        .server-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; }
+        
+        /* Hidden Servers Menu */
+        .servers-list { display: none; margin-top: 15px; border-top: 1px solid rgba(255,0,0,0.2); padding-top: 10px; }
+        .servers-list.open { display: block; animation: slideDown 0.3s ease; }
+
+        .server-item {
+            background: #151515;
             border: 1px solid #333;
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
             transition: 0.3s;
         }
+        .server-item.active { border-color: var(--gold); background: #250000; }
 
-        .server-option.active { border-color: var(--accent-gold); background: #2a0000; }
-        .server-option span { color: var(--accent-gold); font-size: 0.9rem; }
+        .stats { display: flex; gap: 15px; font-size: 0.8rem; margin-top: 8px; color: #aaa; }
+        .dot { color: #00ff00; font-size: 12px; }
 
-        .input-box {
-            background: rgba(255, 0, 0, 0.1);
-            border: 2px solid var(--primary-red);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--accent-gold);
-            color: white;
-            padding: 10px;
-            font-size: 1.2rem;
-            text-align: center;
-            outline: none;
-        }
-
-        .btn-generate {
-            width: 100%;
-            background: linear-gradient(45deg, var(--primary-red), #ff5555);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 15px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-        }
-
-        .result-box {
-            margin-top: 20px;
-            background: rgba(0,0,0,0.5);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px dashed var(--accent-gold);
-            display: none;
-        }
-
-        .pairing-code {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--accent-gold);
-            letter-spacing: 5px;
-        }
+        /* Input Area */
+        .input-card { background: #111; border: 1px solid var(--p-red); border-radius: 20px; padding: 25px; text-align: center; }
+        input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; border-radius: 10px; color: white; text-align: center; margin: 15px 0; outline: none; }
+        input:focus { border-color: var(--p-red); }
+        .btn { width: 100%; padding: 15px; background: var(--p-red); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo-area">
-            <i class="fas fa-crown"></i>
-            <h1>ADEEL-AI</h1>
-            <p>Premium Pairing Code Generator</p>
+        <h1 style="text-align:center; color:var(--p-red); margin-bottom:20px;">ADEEL-AI PRO</h1>
+
+        <div class="server-selector-card" onclick="toggleServers()">
+            <div class="server-header">
+                <div>
+                    <i class="fas fa-server" style="color:var(--gold)"></i> 
+                    <span id="selectedServerName" style="margin-left:10px; font-weight:bold;">Server 1</span>
+                </div>
+                <div style="background:var(--p-red); padding:5px 12px; border-radius:20px; font-size:0.8rem;">
+                    Select <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="servers-list" id="serversList">
+                <div class="server-item active" onclick="setServer(1, 'https://adeel-mini-c947a70d0ed8.herokuapp.com/code', 43, 50)">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>Server 1</strong>
+                        <span style="color:var(--gold)">Click to select</span>
+                    </div>
+                    <div class="stats">
+                        <span><span class="dot">●</span> Active: <b id="s1-active">43</b></span>
+                        <span>Limit: <b id="s1-limit">43/50</b></span>
+                    </div>
+                </div>
+
+                <div class="server-item" onclick="setServer(2, 'https://adeel-mini-c6uuy7a70d0ed8.herokuapp.com/code', 28, 50)">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>Server 2</strong>
+                        <span style="color:var(--gold)">Click to select</span>
+                    </div>
+                    <div class="stats">
+                        <span><span class="dot">●</span> Active: <b id="s2-active">28</b></span>
+                        <span>Limit: <b id="s2-limit">28/50</b></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="server-container">
-            <h3 style="color: var(--accent-gold); margin-bottom: 15px;"><i class="fas fa-bolt"></i> Select a Server</h3>
-            <div class="server-option active" onclick="selectServer(this, 'https://adeel-mini-c947a70d0ed8.herokuapp.com/code')">
-                <div>Server 1</div> <span id="s1-status">Click to select</span>
-            </div>
-            <div class="server-option" onclick="selectServer(this, 'https://adeel-mini-c6uuy7a70d0ed8.herokuapp.com/code')">
-                <div>Server 2</div> <span id="s2-status">Click to select</span>
-            </div>
-            <div class="server-option" onclick="selectServer(this, 'https://adeel-mini-c947a70e900d8.herokuapp.com/code')">
-                <div>Server 3</div> <span id="s3-status">Click to select</span>
-            </div>
-        </div>
-
-        <div class="input-box">
-            <p style="font-size: 0.9rem; margin-bottom: 10px;">Enter WhatsApp Number</p>
+        <div class="input-card">
+            <p>Enter your WhatsApp number</p>
             <input type="tel" id="phoneNumber" placeholder="923035512967">
-            <button class="btn-generate" onclick="generateCode()">Generate Pair Code</button>
+            <button class="btn" onclick="generatePairCode()">Generate Pair Code</button>
+            <div id="resultBox" style="margin-top:20px; display:none;">
+                <p style="color:var(--gold); font-size:2rem; font-weight:900; letter-spacing:5px;" id="pairCode">--------</p>
+            </div>
         </div>
-
-        <div class="result-box" id="resultBox">
-            <p style="color: #888;">Your pairing code will appear here</p>
-            <div class="pairing-code" id="pairCode">--------</div>
-            <button onclick="copyCode()" style="background:none; border:1px solid #555; color:white; padding:5px 15px; border-radius:5px; margin-top:10px; cursor:pointer;">Copy</button>
-        </div>
-
-        <p style="font-size: 0.7rem; color: #666; margin-top: 30px;">© 2026 ADEEL-AI | Powered By DEVELOPER</p>
     </div>
 
-    <script src="pair.js"></script>
+    <script src="logic.js"></script>
 </body>
 </html>
